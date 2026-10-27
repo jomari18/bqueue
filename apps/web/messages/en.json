@@ -71,5 +71,8 @@
     "secret": "Password or PIN",
     "submit": "Sign in",
     "failed": "Could not sign in. Please try again."
+  },
+  "connection": {
+    "reconnecting": "Reconnecting…"
   }
 }

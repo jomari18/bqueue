@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { type ReactNode, useEffect } from "react";
+import { ConnectionBanner } from "@/components/ConnectionBanner";
 import { IconRail } from "@/components/IconRail";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { BrandMark } from "@/components/ui";
@@ -12,6 +13,7 @@ import { loadDemo } from "@/lib/auth/demo-store";
 import { allowedPath, homeFor } from "@/lib/auth/roles";
 import { useSession } from "@/lib/auth/session";
 import { navFor } from "@/lib/nav";
+import { RealtimeProvider, useQueue } from "@/lib/realtime/hooks";
 import { useBootSession } from "./useBootSession";
 
 /** The signed-in part of the app: boot, role gate, the icon rail and, for demo visitors, the demo panel. */
@@ -50,9 +52,16 @@ export function AppShell({ children, wakeIntervalMs }: { children: ReactNode; wa
         </div>
         <LanguageToggle />
       </header>
-      {hasDemo && <DemoPanel />}
-      <div className="mx-auto max-w-5xl px-4 pb-8">{children}</div>
+      <RealtimeProvider>
+        <LiveBanner />
+        {hasDemo && <DemoPanel />}
+        <div className="mx-auto max-w-5xl px-4 pb-8">{children}</div>
+      </RealtimeProvider>
       <IconRail items={navFor(role)} active={pathname} />
     </div>
   );
+}
+
+function LiveBanner() {
+  return <ConnectionBanner status={useQueue().status} />;
 }

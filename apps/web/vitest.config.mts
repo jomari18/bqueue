@@ -15,6 +15,6 @@ export default defineConfig({
     name: "web",
     environment: "jsdom",
     include: ["test/**/*.test.{ts,tsx}"],
-    setupFiles: ["./test/support/setup.ts"],
+    setupFiles: ["./test/support/setup.ts", "./test/support/socket-mock.ts"],
   },
 });

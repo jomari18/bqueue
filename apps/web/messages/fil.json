@@ -71,5 +71,8 @@
     "secret": "Password o PIN",
     "submit": "Mag-sign in",
     "failed": "Hindi makapag-sign in. Subukan ulit."
+  },
+  "connection": {
+    "reconnecting": "Kumokonekta ulit…"
   }
 }
