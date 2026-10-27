@@ -130,9 +130,9 @@ describe("request transitions", () => {
     await act(staff, released, "release", { idChecked: true, orNumber: "OR-3333" });
     const rejected = await submit();
     await act(staff, rejected, "reject", { reason: "Wrong type" });
-    const [{ bad }] = await db.$queryRaw<{ bad: bigint }[]>`
+    const mismatched = await db.$queryRaw<{ bad: bigint }[]>`
       SELECT count(*) AS bad FROM "Request" WHERE (status = 'RELEASED') <> ("verificationCode" IS NOT NULL)`;
-    expect(Number(bad)).toBe(0);
+    expect(Number(mismatched[0]!.bad)).toBe(0);
     const counts = await db.request.findMany({ include: { _count: { select: { events: true } } } });
     const expected: Record<string, number> = { READY_FOR_PICKUP: 3, RELEASED: 4, REJECTED: 2 };
     for (const r of counts) expect(r._count.events).toBe(expected[r.status]);
