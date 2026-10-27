@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpCode, Param, Post, Query, Res, UseGuards } from "@nestjs/common";
-import { ReasonInput, ReleaseInput, type RequestSummary, RequestsQuery, type RequestView, SubmitRequestInput } from "@bq/shared";
+import { type DocumentData, ReasonInput, ReleaseInput, type RequestSummary, RequestsQuery, type RequestView, SubmitRequestInput } from "@bq/shared";
 import type { Response } from "express";
 import { CurrentUser, Roles } from "../auth/decorators.js";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard.js";
@@ -7,6 +7,7 @@ import { RolesGuard } from "../auth/roles.guard.js";
 import type { AuthUser } from "../auth/subjects.js";
 import { UuidPipe, ZodPipe } from "../common/pipes.js";
 import { PrismaService } from "../prisma/prisma.service.js";
+import { documentData } from "./document-data.js";
 import { RequestsService } from "./requests.service.js";
 import { residentActorFor } from "./resident-actor.js";
 
@@ -39,6 +40,11 @@ export class RequestsController {
   @Get(":id")
   get(@CurrentUser() user: AuthUser, @Param("id", UuidPipe) id: string): Promise<RequestView> {
     return this.requests.get(user.barangayId, user, id);
+  }
+
+  @Get(":id/document")
+  document(@CurrentUser() user: AuthUser, @Param("id", UuidPipe) id: string): Promise<DocumentData> {
+    return documentData(this.db, user.barangayId, user, id);
   }
 
   @Post(":id/cancel")

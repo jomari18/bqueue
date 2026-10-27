@@ -21,5 +21,6 @@ export function configureApp(app: NestExpressApplication, config: Config, logger
   app.use(jsonBody());
   app.use("/api/auth/login", loginLimiter());
   app.use("/api/demo/join", limiter({ windowMs: 60_000, limit: 10 }));
+  app.use("/api/verify", limiter({ windowMs: 60_000, limit: 30 }));
   app.useGlobalFilters(new ErrorFilter(logger));
 }
