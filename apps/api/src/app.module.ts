@@ -2,6 +2,7 @@ import { type DynamicModule, Global, Module } from "@nestjs/common";
 import { AuthModule } from "./auth/auth.module.js";
 import { CLOCK, systemClock } from "./common/clock.js";
 import { CONFIG, type Config } from "./config/config.js";
+import { DemoModule } from "./demo/demo.module.js";
 import { HealthController } from "./health/health.controller.js";
 import { PrismaModule } from "./prisma/prisma.module.js";
 
@@ -11,7 +12,7 @@ export class AppModule {
   static forRoot(config: Config): DynamicModule {
     return {
       module: AppModule,
-      imports: [PrismaModule, AuthModule],
+      imports: [PrismaModule, AuthModule, DemoModule],
       controllers: [HealthController],
       providers: [
         { provide: CONFIG, useValue: config },

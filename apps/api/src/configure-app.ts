@@ -5,7 +5,7 @@ import type { Logger } from "pino";
 import { ErrorFilter } from "./common/error.filter.js";
 import { jsonBody, proxySignature, requestLog } from "./common/http-middleware.js";
 import type { Config } from "./config/config.js";
-import { loginLimiter } from "./common/rate-limit.js";
+import { limiter, loginLimiter } from "./common/rate-limit.js";
 
 /**
  * Shared by main.ts and the tests. The order matters: the proxy signature is checked before the body is read
@@ -20,5 +20,6 @@ export function configureApp(app: NestExpressApplication, config: Config, logger
   app.use(proxySignature(config.PROXY_SIGNING_SECRET));
   app.use(jsonBody());
   app.use("/api/auth/login", loginLimiter());
+  app.use("/api/demo/join", limiter({ windowMs: 60_000, limit: 10 }));
   app.useGlobalFilters(new ErrorFilter(logger));
 }
