@@ -1,11 +1,11 @@
-import { Body, Controller, Post, Res, UseGuards } from "@nestjs/common";
-import { TakeTicketInput, type TakeTicketResult } from "@bq/shared";
+import { Body, Controller, HttpCode, Param, Post, Res, UseGuards } from "@nestjs/common";
+import { TakeTicketInput, type TakeTicketResult, type TicketView } from "@bq/shared";
 import type { Response } from "express";
 import { CurrentUser, Roles } from "../auth/decorators.js";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard.js";
 import { RolesGuard } from "../auth/roles.guard.js";
 import type { AuthUser } from "../auth/subjects.js";
-import { ZodPipe } from "../common/pipes.js";
+import { UuidPipe, ZodPipe } from "../common/pipes.js";
 import { residentActorFor } from "../documents/resident-actor.js";
 import { PrismaService } from "../prisma/prisma.service.js";
 import { QueueService } from "./queue.service.js";
@@ -29,5 +29,33 @@ export class QueueController {
     const { ticket, duplicate } = await this.queue.takeTicket(user.barangayId, { kind: "resident", ...actor }, input);
     res.status(duplicate ? 200 : 201);
     return { ticket, duplicate };
+  }
+
+  @Post("tickets/:id/call-again")
+  @HttpCode(200)
+  @Roles("STAFF", "KAPITAN")
+  async callAgain(@CurrentUser() user: AuthUser, @Param("id", UuidPipe) id: string): Promise<{ ticket: TicketView }> {
+    return { ticket: await this.queue.callAgain(user.barangayId, user, id) };
+  }
+
+  @Post("tickets/:id/served")
+  @HttpCode(200)
+  @Roles("STAFF", "KAPITAN")
+  async served(@CurrentUser() user: AuthUser, @Param("id", UuidPipe) id: string): Promise<{ ticket: TicketView }> {
+    return { ticket: await this.queue.finish(user.barangayId, user, id, "SERVED") };
+  }
+
+  @Post("tickets/:id/missed")
+  @HttpCode(200)
+  @Roles("STAFF", "KAPITAN")
+  async missed(@CurrentUser() user: AuthUser, @Param("id", UuidPipe) id: string): Promise<{ ticket: TicketView }> {
+    return { ticket: await this.queue.finish(user.barangayId, user, id, "MISSED") };
+  }
+
+  @Post("tickets/:id/rejoin")
+  @HttpCode(200)
+  @Roles("RESIDENT", "STAFF", "KAPITAN")
+  async rejoin(@CurrentUser() user: AuthUser, @Param("id", UuidPipe) id: string): Promise<{ ticket: TicketView }> {
+    return { ticket: await this.queue.rejoin(user.barangayId, user, id) };
   }
 }

@@ -1,10 +1,12 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { type KioskTicketInput, manilaDate, type TakeTicketInput, ticketCode, type TicketView } from "@bq/shared";
+import type { AuthUser } from "../auth/subjects.js";
 import { newOpaqueToken } from "../auth/tokens.js";
 import { AppError } from "../common/app-error.js";
 import { CLOCK, type Clock } from "../common/clock.js";
 import type { QueueTicket } from "../generated/prisma/client.js";
-import { PrismaService } from "../prisma/prisma.service.js";
+import { PrismaService, type Tx } from "../prisma/prisma.service.js";
+import { assertOperator } from "./counter-views.js";
 import { closeStaleTickets } from "./day-boundary.js";
 import { ticketPosition } from "./read-model.js";
 import { bumpVersion, nextTicketNumber } from "./sequence.js";
@@ -103,5 +105,116 @@ export class QueueService {
 
     const ticket = await this.view(barangayId, result.ticket);
     return { ticket, duplicate: result.duplicate, ...(result.trackingToken ? { trackingToken: result.trackingToken } : {}) };
+  }
+
+  /**
+   * Spec 6.5 in one transaction: lock the counter, refuse it while it still has a called ticket, then take the next
+   * waiting ticket with FOR UPDATE SKIP LOCKED, Priority first, then the earliest. Concurrent counters skip each
+   * other's locked rows instead of waiting, so they never call the same ticket.
+   */
+  async callNext(barangayId: string, staff: AuthUser, counterId: string): Promise<TicketView | null> {
+    const now = this.clock.now();
+    const today = manilaDate(now);
+    const called = await this.db.$transaction(async (tx) => {
+      await closeStaleTickets(tx, barangayId, today);
+      const [counter] = await tx.$queryRaw<{ id: string; open: boolean; staffId: string | null; currentTicketId: string | null; lanes: string[] }[]>`
+        SELECT id, open, "staffId", "currentTicketId", lanes::text[] AS lanes FROM "Counter"
+        WHERE id = ${counterId}::uuid AND "barangayId" = ${barangayId}::uuid FOR UPDATE`;
+      if (!counter) throw new AppError("not_found");
+      assertOperator(counter, staff);
+      if (!counter.open) throw new AppError("invalid_transition");
+      if (counter.currentTicketId) throw new AppError("counter_busy");
+      const [next] = await tx.$queryRaw<{ id: string }[]>`
+        SELECT id FROM "QueueTicket"
+        WHERE "barangayId" = ${barangayId}::uuid AND day = ${today}::date AND status = 'WAITING'
+          AND lane::text = ANY(${counter.lanes}::text[])
+        ORDER BY (lane = 'PRIORITY') DESC, "queuedAt", number
+        FOR UPDATE SKIP LOCKED
+        LIMIT 1`;
+      if (!next) return null;
+      const ticket = await tx.queueTicket.update({
+        where: { id: next.id },
+        data: { status: "CALLED", counterId, calledAt: now, callCount: { increment: 1 } },
+      });
+      await tx.counter.update({ where: { id: counterId }, data: { currentTicketId: ticket.id } });
+      await bumpVersion(tx, barangayId);
+      return ticket;
+    }, QUEUE_TX);
+    return called ? this.view(barangayId, called) : null;
+  }
+
+  /** Re-announces the counter's current ticket, up to 3 calls in all (spec 6.6). */
+  async callAgain(barangayId: string, staff: AuthUser, ticketId: string): Promise<TicketView> {
+    const ticket = await this.db.$transaction(async (tx) => {
+      const t = await this.lockCurrent(tx, barangayId, staff, ticketId);
+      if (t.callCount >= 3) throw new AppError("call_limit");
+      const updated = await tx.queueTicket.update({ where: { id: t.id }, data: { callCount: { increment: 1 } } });
+      await bumpVersion(tx, barangayId);
+      return updated;
+    }, QUEUE_TX);
+    return this.view(barangayId, ticket);
+  }
+
+  /** Served or missed; either way the counter is free for the next call. */
+  async finish(barangayId: string, staff: AuthUser, ticketId: string, outcome: "SERVED" | "MISSED"): Promise<TicketView> {
+    const now = this.clock.now();
+    const ticket = await this.db.$transaction(async (tx) => {
+      const t = await this.lockCurrent(tx, barangayId, staff, ticketId);
+      await tx.counter.update({ where: { id: t.counterId! }, data: { currentTicketId: null } });
+      const updated = await tx.queueTicket.update({
+        where: { id: t.id },
+        data: { status: outcome, ...(outcome === "SERVED" ? { servedAt: now } : {}) },
+      });
+      await bumpVersion(tx, barangayId);
+      return updated;
+    }, QUEUE_TX);
+    return this.view(barangayId, ticket);
+  }
+
+  /**
+   * A missed ticket from today can rejoin once, by its resident or by staff: it waits again at the end of its lane
+   * with the same code and, as a plan ruling, three fresh calls.
+   */
+  async rejoin(barangayId: string, actor: AuthUser, ticketId: string): Promise<TicketView> {
+    const now = this.clock.now();
+    const today = manilaDate(now);
+    const ticket = await this.db.$transaction(async (tx) => {
+      const t = await this.lockTicket(tx, barangayId, ticketId);
+      if (actor.role === "RESIDENT") {
+        const owner = t.residentId ? await tx.resident.findUnique({ where: { id: t.residentId }, select: { userId: true } }) : null;
+        if (owner?.userId !== actor.userId) throw new AppError("not_found");
+      }
+      if (t.status !== "MISSED" || t.rejoined || t.day.toISOString().slice(0, 10) !== today) throw new AppError("invalid_transition");
+      if (t.residentId) {
+        const active = await tx.queueTicket.findFirst({
+          where: { barangayId, residentId: t.residentId, lane: t.lane, status: { in: ["WAITING", "CALLED"] } },
+        });
+        if (active) throw new AppError("already_in_queue");
+      }
+      const updated = await tx.queueTicket.update({
+        where: { id: t.id },
+        data: { status: "WAITING", queuedAt: now, rejoined: true, callCount: 0, counterId: null, calledAt: null },
+      });
+      await bumpVersion(tx, barangayId);
+      return updated;
+    }, QUEUE_TX);
+    return this.view(barangayId, ticket);
+  }
+
+  private async lockTicket(tx: Tx, barangayId: string, ticketId: string) {
+    const [locked] = await tx.$queryRaw<{ id: string }[]>`
+      SELECT id FROM "QueueTicket" WHERE id = ${ticketId}::uuid AND "barangayId" = ${barangayId}::uuid FOR UPDATE`;
+    if (!locked) throw new AppError("not_found");
+    return tx.queueTicket.findUniqueOrThrow({ where: { id: ticketId } });
+  }
+
+  /** The ticket must be the current, called ticket of a counter this person may operate. */
+  private async lockCurrent(tx: Tx, barangayId: string, staff: AuthUser, ticketId: string) {
+    const t = await this.lockTicket(tx, barangayId, ticketId);
+    const counter = t.counterId ? await tx.counter.findUnique({ where: { id: t.counterId } }) : null;
+    if (!counter) throw new AppError("invalid_transition");
+    assertOperator(counter, staff);
+    if (t.status !== "CALLED" || counter.currentTicketId !== t.id) throw new AppError("invalid_transition");
+    return t;
   }
 }
