@@ -1,3 +1,4 @@
+import { HumanAction } from "../simulator/human-action.js";
 import { Body, Controller, Get, HttpCode, Param, Post, Query, Res, UseGuards } from "@nestjs/common";
 import { type DocumentData, ReasonInput, ReleaseInput, type RequestSummary, RequestsQuery, type RequestView, SubmitRequestInput } from "@bq/shared";
 import type { Response } from "express";
@@ -11,6 +12,7 @@ import { documentData } from "./document-data.js";
 import { RequestsService } from "./requests.service.js";
 import { residentActorFor } from "./resident-actor.js";
 
+@HumanAction()
 @Controller("requests")
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class RequestsController {

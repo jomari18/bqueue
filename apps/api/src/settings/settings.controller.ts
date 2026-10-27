@@ -1,3 +1,4 @@
+import { HumanAction } from "../simulator/human-action.js";
 import { Body, Controller, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import {
   CounterInput,
@@ -15,6 +16,7 @@ import { AppError } from "../common/app-error.js";
 import { UuidPipe, ZodPipe } from "../common/pipes.js";
 import { SettingsService } from "./settings.service.js";
 
+@HumanAction()
 @Controller("settings")
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles("KAPITAN")

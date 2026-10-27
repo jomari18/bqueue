@@ -1,3 +1,4 @@
+import { HumanAction } from "../simulator/human-action.js";
 import { Body, Controller, Get, HttpCode, Param, Post, UseGuards } from "@nestjs/common";
 import { AssignInput, type CounterView, type TicketView } from "@bq/shared";
 import { CurrentUser, Roles } from "../auth/decorators.js";
@@ -8,6 +9,7 @@ import { UuidPipe, ZodPipe } from "../common/pipes.js";
 import { CountersService } from "./counters.service.js";
 import { QueueService } from "./queue.service.js";
 
+@HumanAction()
 @Controller("counters")
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles("STAFF", "KAPITAN")

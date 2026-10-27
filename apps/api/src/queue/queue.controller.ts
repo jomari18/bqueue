@@ -1,3 +1,4 @@
+import { HumanAction } from "../simulator/human-action.js";
 import { Body, Controller, Get, HttpCode, Param, Post, Query, Res, UseGuards } from "@nestjs/common";
 import { type QueueSnapshot, TakeTicketInput, type TakeTicketResult, TicketsQuery, type TicketView } from "@bq/shared";
 import type { Response } from "express";
@@ -23,6 +24,7 @@ export class QueueStateController {
   }
 }
 
+@HumanAction()
 @Controller("queue")
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class QueueController {
