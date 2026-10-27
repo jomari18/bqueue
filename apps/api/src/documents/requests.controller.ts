@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpCode, Param, Post, Query, Res, UseGuards } from "@nestjs/common";
-import { type RequestSummary, RequestsQuery, type RequestView, SubmitRequestInput } from "@bq/shared";
+import { ReasonInput, ReleaseInput, type RequestSummary, RequestsQuery, type RequestView, SubmitRequestInput } from "@bq/shared";
 import type { Response } from "express";
 import { CurrentUser, Roles } from "../auth/decorators.js";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard.js";
@@ -46,5 +46,53 @@ export class RequestsController {
   @Roles("RESIDENT")
   cancel(@CurrentUser() user: AuthUser, @Param("id", UuidPipe) id: string): Promise<RequestView> {
     return this.requests.transition(user.barangayId, user, id, { action: "cancel" });
+  }
+
+  @Post(":id/forward")
+  @HttpCode(200)
+  @Roles("STAFF", "KAPITAN")
+  forward(@CurrentUser() user: AuthUser, @Param("id", UuidPipe) id: string): Promise<RequestView> {
+    return this.requests.transition(user.barangayId, user, id, { action: "forward" });
+  }
+
+  @Post(":id/reject")
+  @HttpCode(200)
+  @Roles("STAFF", "KAPITAN")
+  reject(
+    @CurrentUser() user: AuthUser,
+    @Param("id", UuidPipe) id: string,
+    @Body(new ZodPipe(ReasonInput)) input: ReasonInput,
+  ): Promise<RequestView> {
+    return this.requests.transition(user.barangayId, user, id, { action: "reject", reason: input.reason });
+  }
+
+  /** Approve and sign: the kapitan's electronic signature is the approver and the time (spec 3.4). */
+  @Post(":id/approve")
+  @HttpCode(200)
+  @Roles("KAPITAN")
+  approve(@CurrentUser() user: AuthUser, @Param("id", UuidPipe) id: string): Promise<RequestView> {
+    return this.requests.transition(user.barangayId, user, id, { action: "approve" });
+  }
+
+  @Post(":id/release")
+  @HttpCode(200)
+  @Roles("STAFF", "KAPITAN")
+  release(
+    @CurrentUser() user: AuthUser,
+    @Param("id", UuidPipe) id: string,
+    @Body(new ZodPipe(ReleaseInput)) input: ReleaseInput,
+  ): Promise<RequestView> {
+    return this.requests.transition(user.barangayId, user, id, { action: "release", ...input });
+  }
+
+  @Post(":id/revoke")
+  @HttpCode(200)
+  @Roles("KAPITAN")
+  revoke(
+    @CurrentUser() user: AuthUser,
+    @Param("id", UuidPipe) id: string,
+    @Body(new ZodPipe(ReasonInput)) input: ReasonInput,
+  ): Promise<RequestView> {
+    return this.requests.transition(user.barangayId, user, id, { action: "revoke", reason: input.reason });
   }
 }
