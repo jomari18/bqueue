@@ -53,7 +53,8 @@ describe("queue state and events", () => {
       ["Counter 3", false, null],
     ]);
     expect(snap.lastCalls).toEqual([expect.objectContaining({ code: "P-001", counterName: "Counter 2" })]);
-    for (const headers of [{ "x-display-key": b.keys.display }, { "x-kiosk-key": b.keys.kiosk }]) {
+    const keyHeaders: Record<string, string>[] = [{ "x-display-key": b.keys.display }, { "x-kiosk-key": b.keys.kiosk }];
+    for (const headers of keyHeaders) {
       expect((await call(t, "GET", "/api/queue/state", { headers })).body).toEqual(snap);
     }
     expect(JSON.stringify(snap)).not.toContain("Residente");
