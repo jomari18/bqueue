@@ -6,3 +6,5 @@ export * from "./eta.js";
 export * from "./speech.js";
 export * from "./verificationCode.js";
 export { z } from "./zod.js";
+export * from "./errors.js";
+export * from "./transitions.js";
