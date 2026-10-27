@@ -4,12 +4,15 @@ import type { AuthUser } from "../auth/subjects.js";
 import { AppError } from "../common/app-error.js";
 import { PrismaService, type Tx } from "../prisma/prisma.service.js";
 import { assertOperator, counterViews } from "./counter-views.js";
-import { QUEUE_TX } from "./queue.service.js";
+import { QUEUE_TX, QueueService } from "./queue.service.js";
 import { bumpVersion } from "./sequence.js";
 
 @Injectable()
 export class CountersService {
-  constructor(private readonly db: PrismaService) {}
+  constructor(
+    private readonly db: PrismaService,
+    private readonly queue: QueueService,
+  ) {}
 
   list(barangayId: string): Promise<CounterView[]> {
     return counterViews(this.db, barangayId);
@@ -22,6 +25,7 @@ export class CountersService {
       await tx.counter.update({ where: { id: counterId }, data: { open: true } });
       await bumpVersion(tx, barangayId);
     }, QUEUE_TX);
+    await this.queue.publish(barangayId);
     return this.one(barangayId, counterId);
   }
 
@@ -34,6 +38,7 @@ export class CountersService {
       await tx.counter.update({ where: { id: counterId }, data: { open: false } });
       await bumpVersion(tx, barangayId);
     }, QUEUE_TX);
+    await this.queue.publish(barangayId);
     return this.one(barangayId, counterId);
   }
 

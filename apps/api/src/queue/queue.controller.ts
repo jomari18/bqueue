@@ -1,14 +1,27 @@
-import { Body, Controller, HttpCode, Param, Post, Res, UseGuards } from "@nestjs/common";
-import { TakeTicketInput, type TakeTicketResult, type TicketView } from "@bq/shared";
+import { Body, Controller, Get, HttpCode, Param, Post, Query, Res, UseGuards } from "@nestjs/common";
+import { type QueueSnapshot, TakeTicketInput, type TakeTicketResult, TicketsQuery, type TicketView } from "@bq/shared";
 import type { Response } from "express";
-import { CurrentUser, Roles } from "../auth/decorators.js";
+import { CurrentSubject, CurrentUser, Roles } from "../auth/decorators.js";
+import { QueueReaderGuard } from "../auth/key.guard.js";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard.js";
 import { RolesGuard } from "../auth/roles.guard.js";
-import type { AuthUser } from "../auth/subjects.js";
+import type { AuthUser, Subject } from "../auth/subjects.js";
 import { UuidPipe, ZodPipe } from "../common/pipes.js";
 import { residentActorFor } from "../documents/resident-actor.js";
 import { PrismaService } from "../prisma/prisma.service.js";
 import { QueueService } from "./queue.service.js";
+
+/** GET /api/queue/state: residents, staff, the kapitan, TV displays and kiosks may all watch the queue. */
+@Controller("queue")
+export class QueueStateController {
+  constructor(private readonly queue: QueueService) {}
+
+  @Get("state")
+  @UseGuards(QueueReaderGuard)
+  state(@CurrentSubject() subject: Subject): Promise<QueueSnapshot> {
+    return this.queue.state(subject.barangayId);
+  }
+}
 
 @Controller("queue")
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -29,6 +42,18 @@ export class QueueController {
     const { ticket, duplicate } = await this.queue.takeTicket(user.barangayId, { kind: "resident", ...actor }, input);
     res.status(duplicate ? 200 : 201);
     return { ticket, duplicate };
+  }
+
+  @Get("tickets/mine")
+  @Roles("RESIDENT")
+  mine(@CurrentUser() user: AuthUser): Promise<TicketView[]> {
+    return this.queue.todaysTickets(user.barangayId, { residentUserId: user.userId });
+  }
+
+  @Get("tickets")
+  @Roles("STAFF", "KAPITAN")
+  list(@CurrentUser() user: AuthUser, @Query(new ZodPipe(TicketsQuery)) query: TicketsQuery): Promise<TicketView[]> {
+    return this.queue.todaysTickets(user.barangayId, { status: query.status });
   }
 
   @Post("tickets/:id/call-again")

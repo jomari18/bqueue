@@ -2,6 +2,7 @@ import type { NestExpressApplication } from "@nestjs/platform-express";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import type { Logger } from "pino";
+import { sha256Hex } from "./auth/tokens.js";
 import { ErrorFilter } from "./common/error.filter.js";
 import { jsonBody, proxySignature, requestLog } from "./common/http-middleware.js";
 import type { Config } from "./config/config.js";
@@ -22,5 +23,7 @@ export function configureApp(app: NestExpressApplication, config: Config, logger
   app.use("/api/auth/login", loginLimiter());
   app.use("/api/demo/join", limiter({ windowMs: 60_000, limit: 10 }));
   app.use("/api/verify", limiter({ windowMs: 60_000, limit: 30 }));
+  // 10 walk-in tickets a minute per kiosk key, which is one per barangay (spec 6.8).
+  app.use("/api/kiosk/tickets", limiter({ windowMs: 60_000, limit: 10, key: (req) => sha256Hex(req.header("x-kiosk-key") ?? "none") }));
   app.useGlobalFilters(new ErrorFilter(logger));
 }

@@ -1,5 +1,13 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { type KioskTicketInput, manilaDate, type TakeTicketInput, ticketCode, type TicketView } from "@bq/shared";
+import { Inject, Injectable, Logger } from "@nestjs/common";
+import {
+  type KioskTicketInput,
+  manilaDate,
+  type QueueCalledEvent,
+  type QueueSnapshot,
+  type TakeTicketInput,
+  ticketCode,
+  type TicketView,
+} from "@bq/shared";
 import type { AuthUser } from "../auth/subjects.js";
 import { newOpaqueToken } from "../auth/tokens.js";
 import { AppError } from "../common/app-error.js";
@@ -8,7 +16,8 @@ import type { QueueTicket } from "../generated/prisma/client.js";
 import { PrismaService, type Tx } from "../prisma/prisma.service.js";
 import { assertOperator } from "./counter-views.js";
 import { closeStaleTickets } from "./day-boundary.js";
-import { ticketPosition } from "./read-model.js";
+import { EventsService } from "../realtime/events.service.js";
+import { queueSnapshot, ticketPosition } from "./read-model.js";
 import { bumpVersion, nextTicketNumber } from "./sequence.js";
 import { toTicketView } from "./ticket-views.js";
 
@@ -23,10 +32,48 @@ const dayDate = (day: string) => new Date(`${day}T00:00:00.000Z`);
 
 @Injectable()
 export class QueueService {
+  private readonly logger = new Logger("QueueService");
+
   constructor(
     protected readonly db: PrismaService,
     @Inject(CLOCK) protected readonly clock: Clock,
+    private readonly events: EventsService,
   ) {}
+
+  /**
+   * Emits after a committed write. A failed emit never turns a saved change into an error: clients resync from
+   * GET /api/queue/state on the next event or reconnect.
+   */
+  async publish(barangayId: string, called?: QueueCalledEvent, alsoTicketIds: string[] = []): Promise<void> {
+    try {
+      await this.events.queueChanged(barangayId, called, alsoTicketIds);
+    } catch (err) {
+      this.logger.warn(`emit failed: ${(err as Error).name}`);
+    }
+  }
+
+  /** The snapshot for GET /api/queue/state; the first read of a new day closes yesterday's leftovers. */
+  async state(barangayId: string): Promise<QueueSnapshot> {
+    const today = manilaDate(this.clock.now());
+    const changed = await this.db.$transaction((tx) => closeStaleTickets(tx, barangayId, today), QUEUE_TX);
+    if (changed.length > 0) await this.publish(barangayId);
+    return queueSnapshot(this.db, barangayId, today);
+  }
+
+  /** Today's tickets of one resident (My ticket), or today's waiting or missed tickets for staff. */
+  async todaysTickets(barangayId: string, where: { residentUserId?: string; status?: "WAITING" | "MISSED" }): Promise<TicketView[]> {
+    const today = manilaDate(this.clock.now());
+    const rows = await this.db.queueTicket.findMany({
+      where: {
+        barangayId,
+        day: dayDate(today),
+        ...(where.residentUserId ? { resident: { userId: where.residentUserId } } : {}),
+        ...(where.status ? { status: where.status } : {}),
+      },
+      orderBy: [{ queuedAt: "asc" }, { number: "asc" }],
+    });
+    return Promise.all(rows.map((t) => this.view(barangayId, t)));
+  }
 
   /** A ticket's view with its live position and its counter's name. */
   async view(barangayId: string, t: QueueTicket): Promise<TicketView> {
@@ -103,6 +150,7 @@ export class QueueService {
       return { ticket, duplicate: false, trackingToken: tracking?.token };
     }, QUEUE_TX);
 
+    if (!result.duplicate) await this.publish(barangayId);
     const ticket = await this.view(barangayId, result.ticket);
     return { ticket, duplicate: result.duplicate, ...(result.trackingToken ? { trackingToken: result.trackingToken } : {}) };
   }
@@ -137,10 +185,12 @@ export class QueueService {
         data: { status: "CALLED", counterId, calledAt: now, callCount: { increment: 1 } },
       });
       await tx.counter.update({ where: { id: counterId }, data: { currentTicketId: ticket.id } });
-      await bumpVersion(tx, barangayId);
-      return ticket;
+      return { ticket, version: await bumpVersion(tx, barangayId) };
     }, QUEUE_TX);
-    return called ? this.view(barangayId, called) : null;
+    if (!called) return null;
+    const view = await this.view(barangayId, called.ticket);
+    await this.publish(barangayId, this.calledEvent(called.version, view), [view.id]);
+    return view;
   }
 
   /** Re-announces the counter's current ticket, up to 3 calls in all (spec 6.6). */
@@ -149,10 +199,11 @@ export class QueueService {
       const t = await this.lockCurrent(tx, barangayId, staff, ticketId);
       if (t.callCount >= 3) throw new AppError("call_limit");
       const updated = await tx.queueTicket.update({ where: { id: t.id }, data: { callCount: { increment: 1 } } });
-      await bumpVersion(tx, barangayId);
-      return updated;
+      return { ticket: updated, version: await bumpVersion(tx, barangayId) };
     }, QUEUE_TX);
-    return this.view(barangayId, ticket);
+    const view = await this.view(barangayId, ticket.ticket);
+    await this.publish(barangayId, this.calledEvent(ticket.version, view), [view.id]);
+    return view;
   }
 
   /** Served or missed; either way the counter is free for the next call. */
@@ -168,6 +219,7 @@ export class QueueService {
       await bumpVersion(tx, barangayId);
       return updated;
     }, QUEUE_TX);
+    await this.publish(barangayId, undefined, [ticket.id]);
     return this.view(barangayId, ticket);
   }
 
@@ -198,7 +250,12 @@ export class QueueService {
       await bumpVersion(tx, barangayId);
       return updated;
     }, QUEUE_TX);
+    await this.publish(barangayId, undefined, [ticket.id]);
     return this.view(barangayId, ticket);
+  }
+
+  private calledEvent(version: number, t: TicketView): QueueCalledEvent {
+    return { version, code: t.code, lane: t.lane, counterName: t.counterName ?? "", callCount: t.callCount };
   }
 
   private async lockTicket(tx: Tx, barangayId: string, ticketId: string) {
