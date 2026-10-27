@@ -1,5 +1,5 @@
 import { type DynamicModule, Global, Module } from "@nestjs/common";
-import { MePlaceholderController } from "./auth/me.placeholder.controller.js";
+import { AuthModule } from "./auth/auth.module.js";
 import { CLOCK, systemClock } from "./common/clock.js";
 import { CONFIG, type Config } from "./config/config.js";
 import { HealthController } from "./health/health.controller.js";
@@ -11,8 +11,8 @@ export class AppModule {
   static forRoot(config: Config): DynamicModule {
     return {
       module: AppModule,
-      imports: [PrismaModule],
-      controllers: [HealthController, MePlaceholderController],
+      imports: [PrismaModule, AuthModule],
+      controllers: [HealthController],
       providers: [
         { provide: CONFIG, useValue: config },
         { provide: CLOCK, useValue: systemClock },
