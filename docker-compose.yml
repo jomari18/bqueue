@@ -1,0 +1,17 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: bq
+      POSTGRES_PASSWORD: bq
+      POSTGRES_DB: bq_test
+    ports:
+      # Local only: the database is never reachable from the network.
+      - "127.0.0.1:55434:5432"
+    volumes:
+      - ./tools/db-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bq -d bq_test"]
+      interval: 2s
+      timeout: 3s
+      retries: 30

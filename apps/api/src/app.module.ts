@@ -3,6 +3,7 @@ import { MePlaceholderController } from "./auth/me.placeholder.controller.js";
 import { CLOCK, systemClock } from "./common/clock.js";
 import { CONFIG, type Config } from "./config/config.js";
 import { HealthController } from "./health/health.controller.js";
+import { PrismaModule } from "./prisma/prisma.module.js";
 
 @Global()
 @Module({})
@@ -10,6 +11,7 @@ export class AppModule {
   static forRoot(config: Config): DynamicModule {
     return {
       module: AppModule,
+      imports: [PrismaModule],
       controllers: [HealthController, MePlaceholderController],
       providers: [
         { provide: CONFIG, useValue: config },

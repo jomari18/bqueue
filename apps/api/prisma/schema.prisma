@@ -1,0 +1,304 @@
+// B.Queue data model (spec section 5). Money columns are integer centavos; times are timestamptz.
+// Deleting a Barangay cascades to everything it owns. PostgreSQL checks NO ACTION links while a cascade is still
+// running, so every link inside a barangay either cascades (rows that live and die with their parent) or sets null
+// (optional links). Every foreign key column leads an index. Invariants that Prisma cannot express (one CALLED
+// ticket per counter, a code only on released requests, value ranges) are added by hand in the migration SQL.
+
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  moduleFormat        = "esm"
+  importFileExtension = "js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  KAPITAN
+  STAFF
+  RESIDENT
+}
+
+enum SecretKind {
+  PASSWORD
+  PIN
+}
+
+enum DocumentCode {
+  CLEARANCE
+  RESIDENCY
+  INDIGENCY
+  BUSINESS
+  BRGY_ID
+}
+
+enum RequestStatus {
+  SUBMITTED
+  FOR_APPROVAL
+  READY_FOR_PICKUP
+  RELEASED
+  REJECTED
+  CANCELLED
+}
+
+enum Lane {
+  PRIORITY
+  DOCUMENTS
+  GENERAL
+}
+
+enum TicketStatus {
+  WAITING
+  CALLED
+  SERVED
+  MISSED
+  CANCELLED
+}
+
+enum TicketSource {
+  PHONE
+  KIOSK
+}
+
+enum Sex {
+  MALE
+  FEMALE
+}
+
+enum CivilStatus {
+  SINGLE
+  MARRIED
+  WIDOWED
+  SEPARATED
+}
+
+model Barangay {
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code              String    @unique @db.VarChar(4)
+  name              String    @db.VarChar(80)
+  city              String    @db.VarChar(80)
+  queueVersion      BigInt    @default(0)
+  simulatorOn       Boolean   @default(true)
+  lastHumanActionAt DateTime? @db.Timestamptz(3)
+  displayKeyHash    String    @unique @db.Char(64)
+  kioskKeyHash      String    @unique @db.Char(64)
+  joinCodeHash      String?   @unique @db.Char(64)
+  joinCodeExpiresAt DateTime? @db.Timestamptz(3)
+  createdAt         DateTime  @default(now()) @db.Timestamptz(3)
+  expiresAt         DateTime  @db.Timestamptz(3)
+
+  users         User[]
+  residents     Resident[]
+  documentTypes DocumentType[]
+  requests      Request[]
+  counters      Counter[]
+  tickets       QueueTicket[]
+  sequences     QueueSequence[]
+
+  @@index([expiresAt])
+}
+
+model User {
+  id             String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  barangayId     String     @db.Uuid
+  role           Role
+  username       String     @unique @db.VarChar(40)
+  displayName    String     @db.VarChar(60)
+  secretHash     String
+  secretKind     SecretKind
+  failedAttempts Int        @default(0)
+  lockedUntil    DateTime?  @db.Timestamptz(3)
+  active         Boolean    @default(true)
+  createdAt      DateTime   @default(now()) @db.Timestamptz(3)
+
+  barangay         Barangay       @relation(fields: [barangayId], references: [id], onDelete: Cascade)
+  sessions         Session[]
+  resident         Resident?
+  approvedRequests Request[]      @relation("approvedBy")
+  releasedRequests Request[]      @relation("releasedBy")
+  events           RequestEvent[]
+  counters         Counter[]
+
+  @@index([barangayId])
+}
+
+model Session {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String    @db.Uuid
+  familyId     String    @db.Uuid
+  tokenHash    String    @unique @db.Char(64)
+  expiresAt    DateTime  @db.Timestamptz(3)
+  revokedAt    DateTime? @db.Timestamptz(3)
+  replacedById String?   @db.Uuid
+  createdAt    DateTime  @default(now()) @db.Timestamptz(3)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([familyId])
+}
+
+model Resident {
+  id            String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  barangayId    String      @db.Uuid
+  userId        String?     @unique @db.Uuid
+  fullName      String      @db.VarChar(80)
+  birthDate     DateTime    @db.Date
+  sex           Sex
+  civilStatus   CivilStatus
+  purok         Int         @db.SmallInt
+  addressLine   String      @db.VarChar(120)
+  residentSince Int
+  createdAt     DateTime    @default(now()) @db.Timestamptz(3)
+
+  barangay Barangay      @relation(fields: [barangayId], references: [id], onDelete: Cascade)
+  user     User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  requests Request[]
+  tickets  QueueTicket[]
+
+  @@index([barangayId])
+}
+
+model DocumentType {
+  id                String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  barangayId        String       @db.Uuid
+  code              DocumentCode
+  nameEn            String       @db.VarChar(60)
+  nameFil           String       @db.VarChar(60)
+  feeCentavos       Int
+  processingDays    Int
+  validityDays      Int
+  needsBusinessName Boolean      @default(false)
+  active            Boolean      @default(true)
+
+  barangay Barangay  @relation(fields: [barangayId], references: [id], onDelete: Cascade)
+  requests Request[]
+
+  @@unique([barangayId, code])
+}
+
+model Request {
+  id               String        @id @db.Uuid
+  barangayId       String        @db.Uuid
+  residentId       String        @db.Uuid
+  documentTypeId   String        @db.Uuid
+  purpose          String        @db.VarChar(120)
+  businessName     String?       @db.VarChar(80)
+  status           RequestStatus
+  feeCentavos      Int
+  rejectReason     String?       @db.VarChar(200)
+  approvedById     String?       @db.Uuid
+  approvedAt       DateTime?     @db.Timestamptz(3)
+  orNumber         String?       @db.VarChar(16)
+  releasedById     String?       @db.Uuid
+  releasedAt       DateTime?     @db.Timestamptz(3)
+  verificationCode String?       @unique @db.Char(10)
+  validUntil       DateTime?     @db.Timestamptz(3)
+  revokedAt        DateTime?     @db.Timestamptz(3)
+  revokeReason     String?       @db.VarChar(200)
+  createdAt        DateTime      @default(now()) @db.Timestamptz(3)
+  updatedAt        DateTime      @default(now()) @db.Timestamptz(3)
+
+  barangay     Barangay       @relation(fields: [barangayId], references: [id], onDelete: Cascade)
+  resident     Resident       @relation(fields: [residentId], references: [id], onDelete: Cascade)
+  documentType DocumentType   @relation(fields: [documentTypeId], references: [id], onDelete: Cascade)
+  approvedBy   User?          @relation("approvedBy", fields: [approvedById], references: [id], onDelete: SetNull)
+  releasedBy   User?          @relation("releasedBy", fields: [releasedById], references: [id], onDelete: SetNull)
+  events       RequestEvent[]
+  tickets      QueueTicket[]
+
+  @@index([barangayId, status, createdAt])
+  @@index([residentId])
+  @@index([documentTypeId])
+  @@index([approvedById])
+  @@index([releasedById])
+}
+
+model RequestEvent {
+  id         String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  requestId  String         @db.Uuid
+  fromStatus RequestStatus?
+  toStatus   RequestStatus
+  actorId    String?        @db.Uuid
+  note       String?        @db.VarChar(200)
+  createdAt  DateTime       @default(now()) @db.Timestamptz(3)
+
+  request Request @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  actor   User?   @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([requestId])
+  @@index([actorId])
+}
+
+model Counter {
+  id              String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  barangayId      String  @db.Uuid
+  name            String  @db.VarChar(30)
+  lanes           Lane[]
+  staffId         String? @db.Uuid
+  open            Boolean @default(false)
+  currentTicketId String? @unique @db.Uuid
+  sortOrder       Int     @default(0)
+
+  barangay      Barangay      @relation(fields: [barangayId], references: [id], onDelete: Cascade)
+  staff         User?         @relation(fields: [staffId], references: [id], onDelete: SetNull)
+  currentTicket QueueTicket?  @relation("currentTicket", fields: [currentTicketId], references: [id], onDelete: SetNull)
+  tickets       QueueTicket[] @relation("ticketCounter")
+
+  @@index([barangayId])
+  @@index([staffId])
+}
+
+model QueueTicket {
+  id                String       @id @db.Uuid
+  barangayId        String       @db.Uuid
+  day               DateTime     @db.Date
+  lane              Lane
+  number            Int
+  code              String       @db.VarChar(8)
+  status            TicketStatus
+  source            TicketSource
+  residentId        String?      @db.Uuid
+  requestId         String?      @db.Uuid
+  trackingTokenHash String?      @unique @db.Char(64)
+  queuedAt          DateTime     @db.Timestamptz(3)
+  calledAt          DateTime?    @db.Timestamptz(3)
+  servedAt          DateTime?    @db.Timestamptz(3)
+  counterId         String?      @db.Uuid
+  callCount         Int          @default(0)
+  rejoined          Boolean      @default(false)
+  createdAt         DateTime     @default(now()) @db.Timestamptz(3)
+
+  barangay  Barangay  @relation(fields: [barangayId], references: [id], onDelete: Cascade)
+  resident  Resident? @relation(fields: [residentId], references: [id], onDelete: Cascade)
+  request   Request?  @relation(fields: [requestId], references: [id], onDelete: SetNull)
+  counter   Counter?  @relation("ticketCounter", fields: [counterId], references: [id], onDelete: SetNull)
+  currentAt Counter?  @relation("currentTicket")
+
+  @@unique([barangayId, day, lane, number])
+  @@index([barangayId, day, status, lane, queuedAt])
+  @@index([residentId])
+  @@index([requestId])
+  @@index([counterId])
+}
+
+model QueueSequence {
+  barangayId String   @db.Uuid
+  day        DateTime @db.Date
+  lane       Lane
+  lastNumber Int
+
+  barangay Barangay @relation(fields: [barangayId], references: [id], onDelete: Cascade)
+
+  @@id([barangayId, day, lane])
+}
+
+model DemoQuota {
+  ipHash String   @db.Char(64)
+  day    DateTime @db.Date
+  count  Int
+
+  @@id([ipHash, day])
+}
