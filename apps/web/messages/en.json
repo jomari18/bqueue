@@ -74,5 +74,58 @@
   },
   "connection": {
     "reconnecting": "Reconnecting…"
+  },
+  "resident": {
+    "homeTitle": "What do you need?",
+    "homeHelp": "Choose a document, then tell us what it is for.",
+    "free": "Free",
+    "quickPurposes": "Common purposes",
+    "purpose": {
+      "employment": "Employment",
+      "school": "School",
+      "bank": "Bank",
+      "travel": "Travel",
+      "others": "Others"
+    },
+    "purposeLabel": "Purpose",
+    "businessName": "Business name",
+    "submit": "Submit request",
+    "tryAgain": "Try again",
+    "submitFailed": "Could not send the request.",
+    "myRequests": "My requests",
+    "noRequests": "You have no requests yet.",
+    "pickup": "Get a number for pickup",
+    "cancel": "Cancel request",
+    "cancelConfirm": "Cancel this request?",
+    "cancelYes": "Yes, cancel it",
+    "cancelNo": "Keep it"
+  },
+  "status": {
+    "SUBMITTED": "Submitted",
+    "FOR_APPROVAL": "For approval",
+    "READY_FOR_PICKUP": "Ready for pickup",
+    "RELEASED": "Released",
+    "REJECTED": "Rejected",
+    "CANCELLED": "Cancelled"
+  },
+  "ticket": {
+    "title": "My ticket",
+    "near": "Almost your turn. Get ready.",
+    "called": "Your turn! {counter}",
+    "ok": "OK",
+    "next": "You're next",
+    "eta": "{ahead} ahead · about {minutes} min",
+    "served": "Done. Thank you!",
+    "expired": "This number has expired.",
+    "missed": "You missed your turn.",
+    "rejoin": "Rejoin the line",
+    "getNumber": "Get a number",
+    "takeFailed": "Could not get a number."
+  },
+  "lanes": {
+    "PRIORITY": "Priority",
+    "DOCUMENTS": "Documents",
+    "GENERAL": "General",
+    "priorityHint": "Seniors, PWD, pregnant"
   }
 }

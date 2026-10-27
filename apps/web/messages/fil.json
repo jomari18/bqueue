@@ -74,5 +74,58 @@
   },
   "connection": {
     "reconnecting": "Kumokonekta ulit…"
+  },
+  "resident": {
+    "homeTitle": "Ano ang kailangan mo?",
+    "homeHelp": "Pumili ng dokumento, saka sabihin kung para saan.",
+    "free": "Libre",
+    "quickPurposes": "Karaniwang layunin",
+    "purpose": {
+      "employment": "Trabaho",
+      "school": "Paaralan",
+      "bank": "Bangko",
+      "travel": "Biyahe",
+      "others": "Iba pa"
+    },
+    "purposeLabel": "Layunin",
+    "businessName": "Pangalan ng negosyo",
+    "submit": "Ipadala ang request",
+    "tryAgain": "Subukan ulit",
+    "submitFailed": "Hindi naipadala ang request.",
+    "myRequests": "Mga request ko",
+    "noRequests": "Wala ka pang request.",
+    "pickup": "Kumuha ng numero para sa pickup",
+    "cancel": "Kanselahin ang request",
+    "cancelConfirm": "Kanselahin ang request na ito?",
+    "cancelYes": "Oo, kanselahin",
+    "cancelNo": "Huwag"
+  },
+  "status": {
+    "SUBMITTED": "Naipadala",
+    "FOR_APPROVAL": "Para sa pag-apruba",
+    "READY_FOR_PICKUP": "Puwede nang kunin",
+    "RELEASED": "Nakuha na",
+    "REJECTED": "Hindi naaprubahan",
+    "CANCELLED": "Kinansela"
+  },
+  "ticket": {
+    "title": "Ticket ko",
+    "near": "Malapit ka na. Maghanda na.",
+    "called": "Ikaw na! {counter}",
+    "ok": "OK",
+    "next": "Ikaw na ang susunod",
+    "eta": "{ahead} pa ang nauna · mga {minutes} min",
+    "served": "Tapos na. Salamat!",
+    "expired": "Expired na ang numerong ito.",
+    "missed": "Nalampasan ang tawag sa iyo.",
+    "rejoin": "Bumalik sa pila",
+    "getNumber": "Kumuha ng numero",
+    "takeFailed": "Hindi nakakuha ng numero."
+  },
+  "lanes": {
+    "PRIORITY": "Priority",
+    "DOCUMENTS": "Dokumento",
+    "GENERAL": "Pangkalahatan",
+    "priorityHint": "Senior, PWD, buntis"
   }
 }
