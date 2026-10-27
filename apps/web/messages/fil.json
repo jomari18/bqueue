@@ -35,5 +35,41 @@
     "title": "Hindi makita ang page",
     "body": "Wala ang page na ito o nailipat na.",
     "home": "Pumunta sa home page"
+  },
+  "shell": {
+    "waking": "Ginigising ang server… (hanggang isang minuto bago magising ang libreng server)",
+    "offline": "Hindi maabot ang server. Sinusubukan ulit…",
+    "loading": "Naglo-load…"
+  },
+  "demoEnded": {
+    "title": "Tapos na ang demo barangay na ito.",
+    "body": "Binubura ang mga demo barangay pagkalipas ng 24 oras.",
+    "start": "Magsimula ng bagong demo"
+  },
+  "demo": {
+    "title": "Demo panel",
+    "switchRole": "Palitan ang role",
+    "roleKapitan": "Kapitan",
+    "roleStaff": "Staff – Counter 2",
+    "roleResident": "Residente – Juan Dela Cruz",
+    "openTv": "Buksan ang TV display",
+    "openKiosk": "Buksan ang kiosk",
+    "simulator": "Simulated na residente",
+    "simulatorHint": "Lumipat sa Kapitan para mabago ito",
+    "expires": "Demo barangay, mabubura sa loob ng {hours} oras",
+    "qrLabel": "QR code para buksan ang resident view sa phone",
+    "qrHelp": "I-scan gamit ang phone para pumasok bilang si Juan Dela Cruz.",
+    "newQr": "Bagong QR code"
+  },
+  "join": {
+    "joining": "Binubuksan ang resident view…",
+    "expired": "Expired na ang QR code na ito. Humingi ng bago sa demo panel."
+  },
+  "login": {
+    "title": "Mag-sign in",
+    "username": "Username",
+    "secret": "Password o PIN",
+    "submit": "Mag-sign in",
+    "failed": "Hindi makapag-sign in. Subukan ulit."
   }
 }

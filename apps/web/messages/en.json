@@ -35,5 +35,41 @@
     "title": "Page not found",
     "body": "This page does not exist or was moved.",
     "home": "Go to the home page"
+  },
+  "shell": {
+    "waking": "Waking up the server… (the free server takes up to a minute to wake up)",
+    "offline": "Can't reach the server. Retrying…",
+    "loading": "Loading…"
+  },
+  "demoEnded": {
+    "title": "This demo barangay has ended.",
+    "body": "Demo barangays are deleted after 24 hours.",
+    "start": "Start a new demo"
+  },
+  "demo": {
+    "title": "Demo panel",
+    "switchRole": "Switch role",
+    "roleKapitan": "Kapitan",
+    "roleStaff": "Staff – Counter 2",
+    "roleResident": "Residente – Juan Dela Cruz",
+    "openTv": "Open TV display",
+    "openKiosk": "Open kiosk",
+    "simulator": "Simulated residents",
+    "simulatorHint": "Switch to Kapitan to change this",
+    "expires": "Demo barangay, deleted in {hours} h",
+    "qrLabel": "QR code to open the resident view on a phone",
+    "qrHelp": "Scan with a phone to join as Juan Dela Cruz.",
+    "newQr": "New QR code"
+  },
+  "join": {
+    "joining": "Opening the resident view…",
+    "expired": "This QR code has expired. Ask for a new one on the demo panel."
+  },
+  "login": {
+    "title": "Sign in",
+    "username": "Username",
+    "secret": "Password or PIN",
+    "submit": "Sign in",
+    "failed": "Could not sign in. Please try again."
   }
 }
