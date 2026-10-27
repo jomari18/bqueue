@@ -5,6 +5,7 @@ import { CONFIG, type Config } from "./config/config.js";
 import { DemoModule } from "./demo/demo.module.js";
 import { DocumentsModule } from "./documents/documents.module.js";
 import { SocketHub } from "./common/socket-hub.js";
+import { PresenceTracker } from "./common/presence.js";
 import { HealthController } from "./health/health.controller.js";
 import { PrismaModule } from "./prisma/prisma.module.js";
 import { QueueModule } from "./queue/queue.module.js";
@@ -23,8 +24,9 @@ export class AppModule {
         { provide: CONFIG, useValue: config },
         { provide: CLOCK, useValue: systemClock },
         SocketHub,
+        PresenceTracker,
       ],
-      exports: [CONFIG, CLOCK, SocketHub],
+      exports: [CONFIG, CLOCK, SocketHub, PresenceTracker],
     };
   }
 }

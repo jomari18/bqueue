@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import type { Server } from "node:http";
+import type { AddressInfo } from "node:net";
 import type { Type } from "@nestjs/common";
 import type { NestExpressApplication } from "@nestjs/platform-express";
 import { Test, type TestingModuleBuilder } from "@nestjs/testing";
@@ -31,6 +32,8 @@ export type TestApp = {
   app: NestExpressApplication;
   http: Server;
   clock: TestClock;
+  /** Set when the app listens on a real port (socket tests). */
+  url?: string;
   close(): Promise<void>;
 };
 
@@ -41,6 +44,7 @@ export async function createTestApp(
     configure?: (b: TestingModuleBuilder) => TestingModuleBuilder;
     logLines?: object[];
     env?: Partial<Record<keyof typeof testEnv, string>>;
+    listen?: boolean;
   } = {},
 ): Promise<TestApp> {
   const config = loadConfig({ ...testEnv, ...opts.env });
@@ -59,6 +63,11 @@ export async function createTestApp(
     ? pino({ level: "info" }, { write: (line: string) => void lines.push(JSON.parse(line)) })
     : pino({ level: "silent" });
   configureApp(app, config, logger);
-  await app.init();
-  return { app, http: app.getHttpServer() as Server, clock, close: () => app.close() };
+  let url: string | undefined;
+  if (opts.listen) {
+    await app.listen(0, "127.0.0.1");
+    const address = (app.getHttpServer() as Server).address() as AddressInfo;
+    url = `http://127.0.0.1:${address.port}`;
+  } else await app.init();
+  return { app, http: app.getHttpServer() as Server, clock, url, close: () => app.close() };
 }

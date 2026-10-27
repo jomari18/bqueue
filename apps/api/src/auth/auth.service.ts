@@ -3,6 +3,7 @@ import type { LoginInput, MeView, SessionResult } from "@bq/shared";
 import { Inject, Injectable } from "@nestjs/common";
 import { AppError } from "../common/app-error.js";
 import { CLOCK, type Clock } from "../common/clock.js";
+import { SocketHub } from "../common/socket-hub.js";
 import { CONFIG, type Config } from "../config/config.js";
 import type { Barangay, User } from "../generated/prisma/client.js";
 import { PrismaService } from "../prisma/prisma.service.js";
@@ -26,6 +27,7 @@ export class AuthService {
     private readonly db: PrismaService,
     @Inject(CONFIG) private readonly config: Config,
     @Inject(CLOCK) private readonly clock: Clock,
+    private readonly hub: SocketHub,
   ) {}
 
   /** Opens a session family. The refresh token lives until the barangay expires; only its hash is stored. */
@@ -124,13 +126,24 @@ export class AuthService {
 
   async logout(token: string | undefined): Promise<void> {
     if (!token) return;
-    const session = await this.db.session.findUnique({ where: { tokenHash: sha256Hex(token) }, select: { familyId: true } });
-    if (session) await this.revokeFamily(session.familyId);
+    const session = await this.db.session.findUnique({
+      where: { tokenHash: sha256Hex(token) },
+      select: { familyId: true, userId: true },
+    });
+    if (!session) return;
+    await this.revokeFamily(session.familyId);
+    await this.disconnectUser(session.userId);
   }
 
   /** Every device of this user must sign in again (deactivation, spec 7.2). */
   async revokeUserSessions(userId: string): Promise<void> {
     await this.db.session.updateMany({ where: { userId, revokedAt: null }, data: { revokedAt: this.clock.now() } });
+    await this.disconnectUser(userId);
+  }
+
+  /** Spec 7.2: the user's open sockets hear `session:revoked` and are closed. */
+  private disconnectUser(userId: string): Promise<void> {
+    return this.hub.disconnect(`u:${userId}`, { event: "session:revoked", payload: {} });
   }
 
   async me(user: AuthUser): Promise<MeView> {
