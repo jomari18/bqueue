@@ -9,6 +9,7 @@ import { CLOCK, type Clock } from "../common/clock.js";
 import { CONFIG, type Config } from "../config/config.js";
 import { Prisma } from "../generated/prisma/client.js";
 import { PrismaService } from "../prisma/prisma.service.js";
+import { closeStaleTickets } from "../queue/day-boundary.js";
 import { generateDemoData } from "./generate-demo.js";
 import { insertDemoData } from "./insert-demo.js";
 
@@ -174,10 +175,14 @@ export class DemoService {
     return { joinLink: `${this.config.SITE_ORIGIN}/join#${join.token}`, joinExpiresAt: joinExpiresAt.toISOString() };
   }
 
-  /** The daily job (and every new demo) deletes expired barangays; everything they own cascades. */
+  /**
+   * The daily job (and every new demo) deletes expired barangays; everything they own cascades. The job also closes
+   * yesterday's leftover tickets in every barangay (spec 6.10).
+   */
   async cleanup(limit = 20): Promise<{ deleted: number }> {
     const now = this.clock.now();
     const deleted = await this.deleteExpired(limit);
+    await this.db.$transaction((tx) => closeStaleTickets(tx, null, manilaDate(now)));
     await this.db.demoQuota.deleteMany({ where: { day: { lt: dayDate(manilaDate(new Date(now.getTime() - 2 * DAY_MS))) } } });
     return { deleted };
   }

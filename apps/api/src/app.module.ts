@@ -7,6 +7,7 @@ import { DocumentsModule } from "./documents/documents.module.js";
 import { SocketHub } from "./common/socket-hub.js";
 import { HealthController } from "./health/health.controller.js";
 import { PrismaModule } from "./prisma/prisma.module.js";
+import { QueueModule } from "./queue/queue.module.js";
 
 @Global()
 @Module({})
@@ -14,7 +15,7 @@ export class AppModule {
   static forRoot(config: Config): DynamicModule {
     return {
       module: AppModule,
-      imports: [PrismaModule, AuthModule, DemoModule, DocumentsModule],
+      imports: [PrismaModule, AuthModule, DemoModule, DocumentsModule, QueueModule],
       controllers: [HealthController],
       providers: [
         { provide: CONFIG, useValue: config },
