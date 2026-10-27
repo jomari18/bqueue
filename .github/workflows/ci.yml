@@ -27,6 +27,8 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm test
+      - name: Build the web app
+        run: npm run build -w @bq/web
 
   api:
     name: API tests

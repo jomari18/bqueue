@@ -1,0 +1,39 @@
+{
+  "brand": {
+    "name": "B.Queue",
+    "tagline": "Mga request sa barangay at live na pila, iisang lugar lang."
+  },
+  "nav": {
+    "label": "Pangunahing navigation",
+    "home": "Home",
+    "myRequests": "Mga request ko",
+    "myTicket": "Ticket ko",
+    "board": "Board",
+    "counter": "Counter",
+    "approvals": "Aaprubahan",
+    "reports": "Ulat",
+    "settings": "Settings"
+  },
+  "language": {
+    "label": "Wika",
+    "en": "EN",
+    "fil": "FIL"
+  },
+  "common": {
+    "loading": "Naglo-load…",
+    "tryAgain": "Subukan ulit",
+    "cancel": "Kanselahin",
+    "confirm": "Kumpirmahin",
+    "close": "Isara",
+    "back": "Bumalik"
+  },
+  "errorPage": {
+    "title": "May nagkaproblema",
+    "body": "Subukan ulit. Kung mangyari pa rin, i-reload ang page."
+  },
+  "notFound": {
+    "title": "Hindi makita ang page",
+    "body": "Wala ang page na ito o nailipat na.",
+    "home": "Pumunta sa home page"
+  }
+}

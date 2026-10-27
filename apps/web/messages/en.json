@@ -1,0 +1,39 @@
+{
+  "brand": {
+    "name": "B.Queue",
+    "tagline": "Barangay requests and a live queue, in one place."
+  },
+  "nav": {
+    "label": "Main navigation",
+    "home": "Home",
+    "myRequests": "My requests",
+    "myTicket": "My ticket",
+    "board": "Board",
+    "counter": "Counter",
+    "approvals": "Approvals",
+    "reports": "Reports",
+    "settings": "Settings"
+  },
+  "language": {
+    "label": "Language",
+    "en": "EN",
+    "fil": "FIL"
+  },
+  "common": {
+    "loading": "Loading…",
+    "tryAgain": "Try again",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close",
+    "back": "Back"
+  },
+  "errorPage": {
+    "title": "Something went wrong",
+    "body": "Please try again. If it keeps happening, reload the page."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "This page does not exist or was moved.",
+    "home": "Go to the home page"
+  }
+}

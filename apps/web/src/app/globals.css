@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+/*
+ * B.Queue tokens (spec 11.2): Donka's warm canvas and white cards, with forest green in place of Donka's pink.
+ * Light theme only. Every text pair passes WCAG AA; test/tokens.test.ts checks them.
+ */
+:root {
+  --bg: #F8F7F4;
+  --surface: #FFFFFF;
+  --raised: #F1EFEA;
+  --text: #1A1A1A;
+  --muted: #5F5E5A;
+  --accent: #1F7A4D;
+  --accent-tint: #E2F1E8;
+  --accent-ink: #0F4029;
+  --on-accent: #FFFFFF;
+  --lime: #C6F432;
+  --danger: #B42318;
+  --warning: #8A5206;
+  --line: #E4E1DA;
+  --radius-card: 20px;
+  --radius-pill: 999px;
+  --radius-input: 12px;
+  --shadow-card: 0 1px 2px rgb(16 24 16 / 0.04), 0 8px 24px rgb(16 24 16 / 0.06);
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-tint: var(--accent-tint);
+  --color-accent-ink: var(--accent-ink);
+  --color-on-accent: var(--on-accent);
+  --color-lime: var(--lime);
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
+  --color-line: var(--line);
+  --radius-card: var(--radius-card);
+  --radius-pill: var(--radius-pill);
+  --radius-input: var(--radius-input);
+  --shadow-card: var(--shadow-card);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-sora), var(--font-inter), ui-sans-serif, sans-serif;
+  --font-serif: var(--font-noto-serif), ui-serif, Georgia, serif;
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Ticket numbers on the 1080p TV, readable from 6 meters (spec 10). */
+.tv-number {
+  font-size: 200px;
+  line-height: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
