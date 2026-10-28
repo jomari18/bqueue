@@ -44,7 +44,9 @@
   "demoEnded": {
     "title": "This demo barangay has ended.",
     "body": "Demo barangays are deleted after 24 hours.",
-    "start": "Start a new demo"
+    "start": "Start a new demo",
+    "linkTitle": "This screen's link no longer works.",
+    "linkBody": "Its demo barangay may have ended, or the kapitan made a new link in Settings."
   },
   "demo": {
     "title": "Demo panel",
@@ -155,7 +157,8 @@
     "free": "Free",
     "missedTitle": "Missed numbers",
     "rejoin": "Rejoin {code}",
-    "failed": "That didn't go through. Try again."
+    "failed": "That didn't go through. Try again.",
+    "releaseFirst": "Release the document before marking it served."
   },
   "release": {
     "title": "Release document",

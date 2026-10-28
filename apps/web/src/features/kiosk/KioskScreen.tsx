@@ -7,6 +7,7 @@ import { BrandMark, Button, LiveRegion } from "@/components/ui";
 import { ConnectionBanner } from "@/components/ConnectionBanner";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { DemoEnded } from "@/features/demo/DemoEnded";
+import { LinkInvalid } from "@/features/demo/LinkInvalid";
 import { api, ApiError } from "@/lib/api/client";
 import { useKeyQueue } from "@/lib/realtime/hooks";
 import { KioskTicket } from "./KioskTicket";
@@ -59,6 +60,7 @@ export function KioskScreen() {
   }
 
   if (status === "ended" || ended) return <DemoEnded />;
+  if (status === "invalid") return <LinkInvalid />;
   if (!kioskKey) return <main className="grid min-h-dvh place-items-center p-8 text-center text-2xl">{t("missingKey")}</main>;
   if (phase.kind === "done") return <KioskTicket result={phase.result} onDone={reset} />;
 

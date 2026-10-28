@@ -44,7 +44,9 @@
   "demoEnded": {
     "title": "Tapos na ang demo barangay na ito.",
     "body": "Binubura ang mga demo barangay pagkalipas ng 24 oras.",
-    "start": "Magsimula ng bagong demo"
+    "start": "Magsimula ng bagong demo",
+    "linkTitle": "Hindi na gumagana ang link ng screen na ito.",
+    "linkBody": "Maaaring tapos na ang demo barangay nito, o gumawa ang kapitan ng bagong link sa Settings."
   },
   "demo": {
     "title": "Demo panel",
@@ -155,7 +157,8 @@
     "free": "Libre",
     "missedTitle": "Mga numerong lumampas",
     "rejoin": "Ibalik ang {code}",
-    "failed": "Hindi natuloy. Subukan ulit."
+    "failed": "Hindi natuloy. Subukan ulit.",
+    "releaseFirst": "I-release muna ang dokumento bago markahang tapos."
   },
   "release": {
     "title": "I-release ang dokumento",

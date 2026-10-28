@@ -6,6 +6,7 @@ import { ConnectionBanner } from "@/components/ConnectionBanner";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { BrandMark, Card, LiveRegion } from "@/components/ui";
 import { DemoEnded } from "@/features/demo/DemoEnded";
+import { LinkInvalid } from "@/features/demo/LinkInvalid";
 import { etaText } from "@/lib/format";
 import { useTracker } from "@/lib/realtime/hooks";
 
@@ -18,6 +19,7 @@ export function TrackerScreen() {
   const { update, status } = useTracker(token);
 
   if (status === "ended") return <DemoEnded />;
+  if (status === "invalid") return <LinkInvalid />;
   return (
     <main className="mx-auto flex min-h-dvh max-w-md flex-col gap-6 px-4 py-8">
       <header className="flex items-center justify-between">

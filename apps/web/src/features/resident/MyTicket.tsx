@@ -8,41 +8,22 @@ import { Button, Card, LiveRegion, Pill } from "@/components/ui";
 import { api, ApiError } from "@/lib/api/client";
 import { etaText } from "@/lib/format";
 import { useMyTickets } from "@/lib/realtime/hooks";
-import { useTicketAlerts } from "./useTicketAlerts";
 
 const LANES: Lane[] = ["PRIORITY", "DOCUMENTS", "GENERAL"];
 
-/** My ticket: today's numbers with live position and alerts, and walk-in numbers for free lanes. */
+/** My ticket: today's numbers with their live position, and walk-in numbers for free lanes. The alerts are ResidentAlerts. */
 export function MyTicket() {
   const t = useTranslations("ticket");
   const { tickets } = useMyTickets();
-  const { near, called, dismiss } = useTicketAlerts(tickets);
   const activeLanes = new Set(tickets.filter((x) => x.status === "WAITING" || x.status === "CALLED").map((x) => x.lane));
 
   return (
     <section className="flex flex-col gap-4 pt-4">
       <h1 className="font-heading text-2xl font-bold">{t("title")}</h1>
-      {near && near.status === "WAITING" && (
-        <p role="status" className="rounded-card bg-accent-tint p-4 font-semibold text-accent-ink">
-          {t("near")}
-        </p>
-      )}
       {tickets.map((ticket) => (
         <TicketCard key={ticket.id} ticket={ticket} />
       ))}
       <TakeNumber lanes={LANES.filter((l) => !activeLanes.has(l))} />
-      {called && called.status === "CALLED" && (
-        <div role="alertdialog" aria-labelledby="called-title" className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-6 bg-accent p-6 text-center text-on-accent">
-          <p className="text-2xl font-semibold">{called.code}</p>
-          <h2 id="called-title" className="font-heading text-5xl font-bold">
-            {t("called", { counter: called.counterName ?? "" })}
-          </h2>
-          <LiveRegion assertive>{t("called", { counter: called.counterName ?? "" })}</LiveRegion>
-          <Button variant="secondary" onClick={dismiss}>
-            {t("ok")}
-          </Button>
-        </div>
-      )}
     </section>
   );
 }

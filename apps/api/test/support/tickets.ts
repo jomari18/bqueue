@@ -17,6 +17,7 @@ export function insertTicket(
     residentId?: string | null;
     counterId?: string | null;
     callCount?: number;
+    requestId?: string | null;
   },
 ) {
   return db.queueTicket.create({
@@ -35,6 +36,7 @@ export function insertTicket(
       servedAt: t.servedAt ?? null,
       counterId: t.counterId ?? null,
       callCount: t.callCount ?? 0,
+      requestId: t.requestId ?? null,
     },
   });
 }

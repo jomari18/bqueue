@@ -5,7 +5,7 @@ import { type QueryClient, useQuery, useQueryClient } from "@tanstack/react-quer
 import { useRouter } from "next/navigation";
 import { createContext, type ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api/client";
-import { clearSession } from "@/lib/auth/session";
+import { clearSession, refreshSession } from "@/lib/auth/session";
 import { type ConnectionStatus, connectRealtime, type RealtimeEvent, SOCKET_URL } from "./connection";
 import { applyCalled, applySnapshot, initialQueueStore, type QueueStore } from "./queueStore";
 
@@ -97,8 +97,13 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
         void client.invalidateQueries({ queryKey: ["requests"] });
         void client.invalidateQueries({ queryKey: ["request", e.payload.requestId] });
       } else if (e.type === "session:revoked") {
-        clearSession("signed-out");
-        router.replace("/login");
+        // The API tells every socket of the user, but only one device may have signed out (switching roles on the
+        // laptop, while the phone that joined by QR keeps its own session). A device whose session still refreshes
+        // stays; one that was revoked too (deactivation) is signed out (final review 3).
+        // refreshSession clears the session itself; an ended demo shows the shell's "ended" page.
+        void refreshSession().then((result) => {
+          if (result === "signed-out") router.replace("/login");
+        });
       }
     },
   });

@@ -57,6 +57,19 @@ describe("simulator", () => {
     expect(await sim.staffStep(b.barangay.id, rng)).toBe("skipped");
   });
 
+  it("leaves pickup numbers for a person at a counter, who checks the ID and releases", async () => {
+    const request = await db.request.create({
+      data: { id: randomUUID(), barangayId: b.barangay.id, residentId: b.resident.id, documentTypeId: b.types.CLEARANCE.id, purpose: "x", status: "READY_FOR_PICKUP", feeCentavos: 0 },
+    });
+    const pickup = await insertTicket(db, b.barangay.id, { lane: "DOCUMENTS", number: 1, residentId: b.resident.id, requestId: request.id });
+    await insertTicket(db, b.barangay.id, { lane: "GENERAL", number: 1, queuedAt: new Date("2026-10-28T01:05:00Z") });
+    await db.counter.update({ where: { id: b.counters[0]!.id }, data: { lanes: ["PRIORITY", "DOCUMENTS", "GENERAL"] } });
+    await sim.staffStep(b.barangay.id, mulberry32(5));
+    const c1 = await db.counter.findUniqueOrThrow({ where: { id: b.counters[0]!.id }, include: { currentTicket: true } });
+    expect(c1.currentTicket?.code).toBe("G-001");
+    expect((await db.queueTicket.findUniqueOrThrow({ where: { id: pickup.id } })).status).toBe("WAITING");
+  });
+
   it("counts only a person's business writes as human actions", async () => {
     const old = new Date("2026-10-28T01:00:00Z");
     await db.barangay.update({ where: { id: b.barangay.id }, data: { lastHumanActionAt: old } });

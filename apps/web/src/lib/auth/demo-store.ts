@@ -34,6 +34,16 @@ export function loadDemo(now = new Date()): DemoDevice | null {
   }
 }
 
+/** True when this device kept a demo whose barangay has expired: cleanup may already have deleted it (review 2). */
+export function storedDemoExpired(now = new Date()): boolean {
+  try {
+    const raw = localStorage.getItem(KEY);
+    return raw ? new Date((JSON.parse(raw) as DemoDevice).barangay.expiresAt) <= now : false;
+  } catch {
+    return false;
+  }
+}
+
 export function updateDemoLinks(patch: Partial<Pick<DemoDevice, "displayLink" | "kioskLink" | "joinLink" | "joinExpiresAt">>): void {
   const d = loadDemo();
   if (d) saveDemo({ ...d, ...patch });

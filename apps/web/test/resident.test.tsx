@@ -7,6 +7,7 @@ import { MyRequests } from "../src/features/resident/MyRequests";
 import { RequestForm } from "../src/features/resident/RequestForm";
 import { ResidentHome } from "../src/features/resident/ResidentHome";
 import { MyTicket } from "../src/features/resident/MyTicket";
+import { ResidentAlerts } from "../src/features/resident/ResidentAlerts";
 import { mergeTicketUpdate } from "../src/lib/realtime/hooks";
 import { clearSession, setSession } from "../src/lib/auth/session";
 import { mockFetch, session } from "./support/fetch";
@@ -134,7 +135,13 @@ describe("resident screens", () => {
     vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue(undefined);
     mockFetch(() => ({ status: 200, body: [ticket({ ahead: 5, etaMinutes: 10 })] }));
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-    renderWithIntl(<MyTicket />, { client });
+    renderWithIntl(
+      <>
+        <ResidentAlerts />
+        <MyTicket />
+      </>,
+      { client },
+    );
     expect(await screen.findByText("5 ahead · about 10 min")).toBeInTheDocument();
     act(() => mergeTicketUpdate(client, { version: 2, ticketId: "tk1", code: "D-012", lane: "DOCUMENTS", status: "WAITING", ahead: 2, etaMinutes: 4, counterName: null, callCount: 0, rejoined: false }));
     expect(await screen.findByText("Almost your turn. Get ready.")).toBeInTheDocument();

@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ConnectionBanner } from "@/components/ConnectionBanner";
 import { BrandMark } from "@/components/ui";
 import { DemoEnded } from "@/features/demo/DemoEnded";
+import { LinkInvalid } from "@/features/demo/LinkInvalid";
 import type { RealtimeEvent } from "@/lib/realtime/connection";
 import { useKeyQueue } from "@/lib/realtime/hooks";
 import en from "../../../messages/en.json";
@@ -83,6 +84,7 @@ function LiveDisplay({ displayKey, lang, deps }: { displayKey: string; lang: Dis
   }, [call]);
 
   if (status === "ended") return <DemoEnded />;
+  if (status === "invalid") return <LinkInvalid />;
   const snap = store.snapshot;
   const shown = call?.ev ?? (snap?.lastCalls[0] ? { ...snap.lastCalls[0], version: -1, callCount: 1 } : null);
 

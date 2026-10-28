@@ -9,7 +9,8 @@ import type {
 import { io } from "socket.io-client";
 import { ApiError } from "@/lib/api/client";
 
-export type ConnectionStatus = "connecting" | "live" | "reconnecting" | "paused" | "ended";
+// "invalid": the API no longer knows this screen's key or token (rotated, or its demo barangay was deleted).
+export type ConnectionStatus = "connecting" | "live" | "reconnecting" | "paused" | "ended" | "invalid";
 
 export type RealtimeEvent =
   | { type: "queue:state" | "queue:changed"; payload: QueueSnapshot }
@@ -33,7 +34,8 @@ export const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL ?? "http://localhos
 
 /**
  * Socket.io straight to the API (Netlify cannot proxy WebSockets, spec 4). Every connection attempt fetches a fresh
- * 60-second ticket, every connect resyncs, and an ended demo barangay stops the retries for good.
+ * 60-second ticket, every connect resyncs, and an ended demo barangay or an unknown key stops the retries for good.
+ * A refused handshake leaves Socket.io inactive, so this retries it with backoff (final review 1).
  */
 export function connectRealtime(opts: {
   url: string;
@@ -43,6 +45,8 @@ export function connectRealtime(opts: {
   onConnect: () => void;
 }): { close(): void } {
   let stopped = false;
+  let refused = 0;
+  let retry: ReturnType<typeof setTimeout> | undefined;
   const socket = io(opts.url, {
     transports: ["websocket", "polling"],
     reconnectionDelay: 1000,
@@ -51,7 +55,9 @@ export function connectRealtime(opts: {
       opts.getTicket().then(
         (t) => cb({ ticket: t.ticket }),
         (err: unknown) => {
-          if (err instanceof ApiError && err.code === "session_expired") end();
+          if (err instanceof ApiError && err.code === "session_expired") end("ended");
+          // A key or token the API does not know will not start working on a retry.
+          else if (err instanceof ApiError && (err.status === 401 || err.status === 403 || err.status === 404)) end("invalid");
           else cb({});
         },
       );
@@ -59,13 +65,15 @@ export function connectRealtime(opts: {
   });
   opts.onStatus("connecting");
 
-  function end() {
+  function end(status: "ended" | "invalid") {
     stopped = true;
+    if (retry) clearTimeout(retry);
     socket.disconnect();
-    opts.onStatus("ended");
+    opts.onStatus(status);
   }
 
   socket.on("connect", () => {
+    refused = 0;
     opts.onStatus("live");
     opts.onConnect();
   });
@@ -77,14 +85,21 @@ export function connectRealtime(opts: {
     if (reason === "io server disconnect") setTimeout(() => !stopped && socket.connect(), 1000);
   });
   socket.on("connect_error", (err: unknown) => {
-    if (err instanceof Error && err.message === "session_expired") end();
-    else if (!stopped) opts.onStatus("reconnecting");
+    if (err instanceof Error && err.message === "session_expired") return end("ended");
+    if (stopped) return;
+    opts.onStatus("reconnecting");
+    // Socket.io retries transport errors itself, but not a handshake the server refused.
+    if (!(socket as { active?: boolean }).active) {
+      const delay = Math.min(30_000, 1000 * 2 ** refused++);
+      retry = setTimeout(() => !stopped && socket.connect(), delay);
+    }
   });
   for (const type of EVENTS) socket.on(type, (payload: unknown) => opts.onEvent({ type, payload } as RealtimeEvent));
 
   return {
     close() {
       stopped = true;
+      if (retry) clearTimeout(retry);
       socket.disconnect();
     },
   };

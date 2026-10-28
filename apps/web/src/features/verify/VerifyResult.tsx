@@ -6,19 +6,24 @@ import { useLocale, useTranslations } from "next-intl";
 import { Card } from "@/components/ui";
 import { asLocale } from "@/i18n/locale";
 import { api, ApiError } from "@/lib/api/client";
+import { wakeApi } from "@/lib/api/wake";
 import { formatManilaDate } from "@/lib/format";
 
 const TONES = { VALID: "valid", EXPIRED: "warning", REVOKED: "danger" } as const;
 const TONE_CLASS = { valid: "border-accent bg-accent-tint", warning: "border-warning", danger: "border-danger", missing: "border-line" };
 
 /** The public answer for one code: only the type, the name, the dates and the barangay (spec 13). */
-export function VerifyResult({ code }: { code: string }) {
+export function VerifyResult({ code, wakeIntervalMs }: { code: string; wakeIntervalMs?: number }) {
   const t = useTranslations("verify");
   const locale = asLocale(useLocale());
   const normalized = normalizeVerificationCode(code);
   const query = useQuery({
     queryKey: ["verify", normalized],
-    queryFn: () => api<VerifyView>(`/api/verify/${encodeURIComponent(code)}`, { auth: false }),
+    // A QR scanned after a quiet hour meets a sleeping API: wake it directly first (spec 4, final review 6).
+    queryFn: async () => {
+      await wakeApi(undefined, { intervalMs: wakeIntervalMs });
+      return api<VerifyView>(`/api/verify/${encodeURIComponent(code)}`, { auth: false });
+    },
     enabled: normalized !== null,
     retry: false,
   });

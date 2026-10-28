@@ -3,6 +3,7 @@
 import type { SessionResult } from "@bq/shared";
 import { useSyncExternalStore } from "react";
 import { currentLocale } from "@/i18n/locale";
+import { storedDemoExpired } from "./demo-store";
 
 // The access token lives in memory only (spec 7.2); the refresh token is an HttpOnly cookie the page never sees.
 
@@ -62,7 +63,9 @@ export function refreshSession(): Promise<"ok" | "signed-out" | "ended" | "offli
       }
       if (res.status === 401) {
         const body = (await res.json().catch(() => null)) as { error?: { code?: string } } | null;
-        const ended = body?.error?.code === "session_expired";
+        // Once cleanup has deleted an expired barangay its sessions are gone too, and the API can only say
+        // unauthenticated; the device still knows when its demo ended.
+        const ended = body?.error?.code === "session_expired" || storedDemoExpired();
         clearSession(ended ? "ended" : "signed-out");
         return ended ? ("ended" as const) : ("signed-out" as const);
       }

@@ -128,13 +128,14 @@ export class SimulatorService implements OnModuleInit, OnModuleDestroy {
     return "skipped";
   }
 
-  /** Ate Liza at Counter 1 finishes her current ticket (served 90%, missed 10%) and calls the next. */
+  /** Ate Liza at Counter 1 finishes her current ticket (served 90%, missed 10%) and calls the next one that is not a pickup. */
   async staffStep(barangayId: string, rng: Rng): Promise<string> {
     const counter = await this.db.counter.findFirst({ where: { barangayId }, orderBy: [{ sortOrder: "asc" }] });
     if (!counter || !counter.open || !counter.staffId) return "skipped";
     const staff = { kind: "user" as const, userId: counter.staffId, barangayId, role: "STAFF" as const };
     if (counter.currentTicketId) await this.queue.finish(barangayId, staff, counter.currentTicketId, staffOutcome(rng));
-    const next = await this.queue.callNext(barangayId, staff, counter.id);
+    // Pickup numbers wait for a person at a counter, who checks the ID and releases the document.
+    const next = await this.queue.callNext(barangayId, staff, counter.id, { skipPickups: true });
     return next ? `called ${next.code}` : "nobody waiting";
   }
 

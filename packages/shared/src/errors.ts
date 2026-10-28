@@ -11,6 +11,7 @@ export const ERROR_STATUS = {
   invalid_transition: 409,
   counter_busy: 409,
   call_limit: 409,
+  release_first: 409,
   already_in_queue: 409,
   limit_reached: 409,
   account_locked: 423,
@@ -47,6 +48,10 @@ export const ERROR_MESSAGES: Record<ErrorCode, Bilingual> = {
     fil: "May tinatawag pang numero sa counter na ito.",
   },
   call_limit: { en: "This number was already called 3 times.", fil: "Natawag na nang 3 beses ang numerong ito." },
+  release_first: {
+    en: "Release the document first, or mark the number missed.",
+    fil: "I-release muna ang dokumento, o markahang hindi dumating ang numero.",
+  },
   already_in_queue: {
     en: "You already have a number in this line.",
     fil: "May numero ka na sa pilang ito.",

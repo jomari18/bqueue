@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { PrismaService } from "../src/prisma/prisma.service.js";
 import { createTestApp, type TestApp } from "./support/app.js";
@@ -83,6 +84,28 @@ describe("counter actions", () => {
     expect(served.body.ticket.status).toBe("SERVED");
     expect((await db.queueTicket.findUniqueOrThrow({ where: { id } })).servedAt).toEqual(t.clock.now());
     expect((await db.counter.findUniqueOrThrow({ where: { id: c2 } })).currentTicketId).toBeNull();
+  });
+
+  it("will not mark an unreleased pickup served, so the document is never stranded", async () => {
+    const request = await db.request.create({
+      data: { id: randomUUID(), barangayId: b.barangay.id, residentId: b.resident.id, documentTypeId: b.types.CLEARANCE.id, purpose: "x", status: "READY_FOR_PICKUP", feeCentavos: 0 },
+    });
+    await insertTicket(db, b.barangay.id, { lane: "DOCUMENTS", number: 1, residentId: b.resident.id, requestId: request.id });
+    const called = (await next(staff, c2)).body.ticket;
+    const refused = await act(staff, called.id, "served");
+    expect(refused.status).toBe(409);
+    expect(refused.body.error.code).toBe("release_first");
+    expect((await call(t, "POST", `/api/requests/${request.id}/release`, { token: staff, body: { idChecked: true } })).status).toBe(200);
+    expect((await act(staff, called.id, "served")).status).toBe(200);
+  });
+
+  it("may still mark an unreleased pickup missed", async () => {
+    const request = await db.request.create({
+      data: { id: randomUUID(), barangayId: b.barangay.id, residentId: b.resident.id, documentTypeId: b.types.CLEARANCE.id, purpose: "x", status: "READY_FOR_PICKUP", feeCentavos: 0 },
+    });
+    await insertTicket(db, b.barangay.id, { lane: "DOCUMENTS", number: 1, residentId: b.resident.id, requestId: request.id });
+    const called = (await next(staff, c2)).body.ticket;
+    expect((await act(staff, called.id, "missed")).status).toBe(200);
   });
 
   it("lets a missed ticket rejoin once, at the end of its lane", async () => {

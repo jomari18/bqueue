@@ -9,6 +9,7 @@ import { LanguageToggle } from "@/components/LanguageToggle";
 import { BrandMark } from "@/components/ui";
 import { DemoEnded } from "@/features/demo/DemoEnded";
 import { DemoPanel } from "@/features/demo/DemoPanel";
+import { ResidentAlerts } from "@/features/resident/ResidentAlerts";
 import { loadDemo } from "@/lib/auth/demo-store";
 import { allowedPath, homeFor } from "@/lib/auth/roles";
 import { useSession } from "@/lib/auth/session";
@@ -55,6 +56,7 @@ export function AppShell({ children, wakeIntervalMs }: { children: ReactNode; wa
       <RealtimeProvider>
         <LiveBanner />
         {hasDemo && <DemoPanel />}
+        {role === "RESIDENT" && <ResidentAlerts />}
         <div className="mx-auto max-w-5xl px-4 pb-8">{children}</div>
       </RealtimeProvider>
       <IconRail items={navFor(role)} active={pathname} />

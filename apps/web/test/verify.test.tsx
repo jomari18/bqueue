@@ -65,8 +65,9 @@ describe("verify result", () => {
     expect(screen.getByText(formatManilaDate("2027-04-26T02:00:00.000Z", "fil"))).toBeInTheDocument();
     expect(screen.getByText("Barangay Masagana, Lungsod ng Kalayaan")).toBeInTheDocument();
     expect(screen.getByTestId("verify-status")).toHaveAttribute("data-tone", "valid");
-    expect(calls[0]!.url).toBe("/api/verify/ABCDE-FGHJK");
-    expect(header(calls[0]!.init, "authorization")).toBeNull();
+    const verify = calls.find((c) => c.url.startsWith("/api/verify/"))!;
+    expect(verify.url).toBe("/api/verify/ABCDE-FGHJK");
+    expect(header(verify.init, "authorization")).toBeNull();
   });
 
   it.each([
@@ -79,8 +80,22 @@ describe("verify result", () => {
     expect(screen.getByTestId("verify-status")).not.toHaveAttribute("data-tone", "valid");
   });
 
+  it("wakes the free API before asking, so a scan after a quiet hour still answers", async () => {
+    // Render's cold start outlasts the proxy's 26 seconds; the page pings the API directly first (review 6).
+    let awake = false;
+    const { calls } = mockFetch((url) => {
+      if (url.endsWith("/api/health")) return awake ? { status: 200, body: { ok: true } } : "network-error";
+      return { status: 200, body: result("VALID") };
+    });
+    renderWithIntl(<VerifyResult code="ABCDE-FGHJK" wakeIntervalMs={10} />);
+    await waitFor(() => expect(calls.filter((c) => c.url.endsWith("/api/health")).length).toBeGreaterThan(1));
+    expect(calls.some((c) => c.url.startsWith("/api/verify/"))).toBe(false);
+    awake = true;
+    expect(await screen.findByRole("heading", { name: "Valid document" })).toBeInTheDocument();
+  });
+
   it("says when no document has the code", async () => {
-    mockFetch(() => ({ status: 404, body: apiError("not_found") }));
+    mockFetch((url) => (url.endsWith("/api/health") ? { status: 200, body: { ok: true } } : { status: 404, body: apiError("not_found") }));
     renderWithIntl(<VerifyResult code="ABCDE-FGHJK" />);
     expect(await screen.findByRole("heading", { name: "No document has this code" })).toBeInTheDocument();
   });

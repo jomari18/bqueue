@@ -223,4 +223,12 @@ describe("TV display", () => {
     push({ status: "ended" });
     expect(screen.getByRole("link", { name: /./ })).toHaveAttribute("href", "/");
   });
+
+  it("says when its link no longer works instead of reconnecting forever", () => {
+    const { deps } = fakeDeps();
+    startDisplay("English", deps);
+    push({ status: "invalid" });
+    expect(screen.getByText("This screen's link no longer works.")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Start a new demo" })).toHaveAttribute("href", "/");
+  });
 });

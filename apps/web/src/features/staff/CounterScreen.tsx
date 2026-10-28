@@ -51,6 +51,8 @@ function Counter({ counter, refresh }: { counter: CounterView; refresh: () => Pr
   const [error, setError] = useState<string | null>(null);
   const [releasing, setReleasing] = useState(false);
   const current = counter.current;
+  // A pickup is served only after its release, or the document would wait with no number left to call (review 4).
+  const awaitingRelease = current?.request?.status === "READY_FOR_PICKUP";
 
   async function run(fn: () => Promise<unknown>) {
     setError(null);
@@ -117,16 +119,19 @@ function Counter({ counter, refresh }: { counter: CounterView; refresh: () => Pr
               >
                 {current.callCount >= 3 ? t("calledThrice") : t("callAgain")}
               </Button>
-              <Button onClick={() => void run(() => api(`/api/queue/tickets/${current.id}/served`, { method: "POST" }))}>{t("served")}</Button>
+              <Button disabled={awaitingRelease} onClick={() => void run(() => api(`/api/queue/tickets/${current.id}/served`, { method: "POST" }))}>
+                {t("served")}
+              </Button>
               <Button variant="ghost" onClick={() => void run(() => api(`/api/queue/tickets/${current.id}/missed`, { method: "POST" }))}>
                 {t("missed")}
               </Button>
-              {current.request?.status === "READY_FOR_PICKUP" && (
+              {awaitingRelease && (
                 <Button variant="secondary" onClick={() => setReleasing(true)}>
                   {t("release")}
                 </Button>
               )}
             </div>
+            {awaitingRelease && <p className="text-sm text-muted">{t("releaseFirst")}</p>}
             {releasing && current.request && <ReleaseDialog request={current.request} onDone={() => void refresh()} onClose={() => setReleasing(false)} />}
           </>
         ) : (

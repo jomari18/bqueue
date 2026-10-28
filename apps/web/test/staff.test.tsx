@@ -136,6 +136,19 @@ describe("staff screens", () => {
     expect(JSON.parse(calls.find((c) => c.url === "/api/requests/r9/release")!.init.body as string)).toEqual({ idChecked: true, orNumber: "OR-2026001" });
   });
 
+  it("keeps Served off until a pickup is released, but allows Missed", async () => {
+    const pickup = req({ id: "r9", status: "READY_FOR_PICKUP" });
+    mockFetch((url) => {
+      if (url === "/api/me") return { status: 200, body: me("c2") };
+      if (url === "/api/counters") return { status: 200, body: [counter({ ...ticket({ requestId: "r9" }), request: pickup })] };
+      return { status: 200, body: [] };
+    });
+    renderWithIntl(<CounterScreen />);
+    expect(await screen.findByRole("button", { name: "Served" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Missed" })).toBeEnabled();
+    expect(screen.getByText("Release the document before marking it served.")).toBeInTheDocument();
+  });
+
   it("lets a missed ticket rejoin", async () => {
     const { calls } = mockFetch((url) => {
       if (url === "/api/me") return { status: 200, body: me("c2") };

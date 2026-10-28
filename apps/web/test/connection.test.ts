@@ -86,4 +86,57 @@ describe("real-time connection", () => {
     expect(onEvent).toHaveBeenCalledWith({ type: "queue:called", payload: { code: "D-012" } });
     expect(onEvent).toHaveBeenCalledWith({ type: "session:revoked", payload: {} });
   });
+
+  it("tries again with backoff when the server refuses the handshake", () => {
+    vi.useFakeTimers();
+    fake.connect.mockClear();
+    const statuses: string[] = [];
+    connectRealtime({ url: "http://api", getTicket: vi.fn(), onEvent: vi.fn(), onStatus: (s) => statuses.push(s), onConnect: vi.fn() });
+    // A refused handshake (for example a ticket that could not be fetched) leaves Socket.io inactive for good.
+    fire("connect_error", new Error("unauthorized"));
+    expect(statuses.at(-1)).toBe("reconnecting");
+    vi.advanceTimersByTime(999);
+    expect(fake.connect).not.toHaveBeenCalled();
+    vi.advanceTimersByTime(1);
+    expect(fake.connect).toHaveBeenCalledTimes(1);
+    fire("connect_error", new Error("unauthorized"));
+    vi.advanceTimersByTime(1_999);
+    expect(fake.connect).toHaveBeenCalledTimes(1);
+    vi.advanceTimersByTime(1);
+    expect(fake.connect).toHaveBeenCalledTimes(2);
+    vi.useRealTimers();
+  });
+
+  it("stops and says the link no longer works when the API does not know its key", async () => {
+    const statuses: string[] = [];
+    connectRealtime({
+      url: "http://api",
+      getTicket: async () => {
+        throw new ApiError("unauthenticated", 401, "no");
+      },
+      onEvent: vi.fn(),
+      onStatus: (s) => statuses.push(s),
+      onConnect: vi.fn(),
+    });
+    fake.opts!.auth(() => undefined);
+    await new Promise((r) => setTimeout(r, 0));
+    expect(statuses.at(-1)).toBe("invalid");
+    expect(fake.disconnect).toHaveBeenCalled();
+  });
+
+  it("keeps retrying when the ticket request only failed for now", async () => {
+    const statuses: string[] = [];
+    connectRealtime({
+      url: "http://api",
+      getTicket: async () => {
+        throw new ApiError("service_unavailable", 504, "slow");
+      },
+      onEvent: vi.fn(),
+      onStatus: (s) => statuses.push(s),
+      onConnect: vi.fn(),
+    });
+    const data = await new Promise<object>((resolve) => fake.opts!.auth(resolve));
+    expect(data).toEqual({});
+    expect(statuses).not.toContain("invalid");
+  });
 });

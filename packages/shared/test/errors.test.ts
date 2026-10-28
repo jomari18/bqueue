@@ -2,8 +2,9 @@ import { describe, expect, it } from "vitest";
 import { ERROR_MESSAGES, ERROR_STATUS, type ErrorCode, pickLanguage } from "../src/index.js";
 
 describe("error codes", () => {
-  it("lists the 17 codes of spec 9.9 with their statuses", () => {
-    expect(Object.keys(ERROR_STATUS)).toHaveLength(17);
+  it("lists the 17 codes of spec 9.9, plus release_first from the final review, with their statuses", () => {
+    expect(Object.keys(ERROR_STATUS)).toHaveLength(18);
+    expect(ERROR_STATUS.release_first).toBe(409);
     expect([ERROR_STATUS.counter_busy, ERROR_STATUS.account_locked, ERROR_STATUS.demo_full]).toEqual([409, 423, 503]);
   });
 

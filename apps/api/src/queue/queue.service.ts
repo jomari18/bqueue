@@ -158,9 +158,10 @@ export class QueueService {
   /**
    * Spec 6.5 in one transaction: lock the counter, refuse it while it still has a called ticket, then take the next
    * waiting ticket with FOR UPDATE SKIP LOCKED, Priority first, then the earliest. Concurrent counters skip each
-   * other's locked rows instead of waiting, so they never call the same ticket.
+   * other's locked rows instead of waiting, so they never call the same ticket. `skipPickups` is for the simulated
+   * Counter 1, which cannot check an ID and release a document (final review 4).
    */
-  async callNext(barangayId: string, staff: AuthUser, counterId: string): Promise<TicketView | null> {
+  async callNext(barangayId: string, staff: AuthUser, counterId: string, opts: { skipPickups?: boolean } = {}): Promise<TicketView | null> {
     const now = this.clock.now();
     const today = manilaDate(now);
     const called = await this.db.$transaction(async (tx) => {
@@ -176,6 +177,7 @@ export class QueueService {
         SELECT id FROM "QueueTicket"
         WHERE "barangayId" = ${barangayId}::uuid AND day = ${today}::date AND status = 'WAITING'
           AND lane::text = ANY(${counter.lanes}::text[])
+          AND (${opts.skipPickups ?? false} = false OR "requestId" IS NULL)
         ORDER BY (lane = 'PRIORITY') DESC, "queuedAt", number
         FOR UPDATE SKIP LOCKED
         LIMIT 1`;
@@ -206,11 +208,18 @@ export class QueueService {
     return view;
   }
 
-  /** Served or missed; either way the counter is free for the next call. */
+  /**
+   * Served or missed; either way the counter is free for the next call. A pickup is served only once its document is
+   * released, or the request would wait for pickup with no number to call it (final review 4); missed stays allowed.
+   */
   async finish(barangayId: string, staff: AuthUser, ticketId: string, outcome: "SERVED" | "MISSED"): Promise<TicketView> {
     const now = this.clock.now();
     const ticket = await this.db.$transaction(async (tx) => {
       const t = await this.lockCurrent(tx, barangayId, staff, ticketId);
+      if (outcome === "SERVED" && t.requestId) {
+        const request = await tx.request.findUnique({ where: { id: t.requestId }, select: { status: true } });
+        if (request?.status === "READY_FOR_PICKUP") throw new AppError("release_first");
+      }
       await tx.counter.update({ where: { id: t.counterId! }, data: { currentTicketId: null } });
       const updated = await tx.queueTicket.update({
         where: { id: t.id },

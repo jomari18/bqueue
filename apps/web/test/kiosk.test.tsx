@@ -145,6 +145,13 @@ describe("kiosk", () => {
     push({ status: "ended" });
     expect(screen.getByText("This demo barangay has ended.")).toBeInTheDocument();
   });
+
+  it("says when its link no longer works", () => {
+    mockFetch(() => ({ status: 201, body: result() }));
+    renderWithIntl(<KioskScreen />);
+    push({ status: "invalid" });
+    expect(screen.getByText("This screen's link no longer works.")).toBeInTheDocument();
+  });
 });
 
 describe("ticket tracker", () => {
@@ -172,7 +179,13 @@ describe("ticket tracker", () => {
     expect(screen.getByText("Ikaw na! Counter 2")).toBeInTheDocument();
   });
 
-  it("says when it is the person's turn and thanks them when served", () => {
+it("says when the tracking link no longer works", () => {
+    renderWithIntl(<TrackerScreen />);
+    push({ status: "invalid" });
+    expect(screen.getByText("This screen's link no longer works.")).toBeInTheDocument();
+  });
+
+    it("says when it is the person's turn and thanks them when served", () => {
     renderWithIntl(<TrackerScreen />);
     push({ update: update({ status: "CALLED", counterName: "Counter 2", ahead: 0 }) });
     expect(screen.getByText("Your turn! Counter 2")).toBeInTheDocument();
