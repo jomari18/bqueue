@@ -127,5 +127,47 @@
     "DOCUMENTS": "Dokumento",
     "GENERAL": "Pangkalahatan",
     "priorityHint": "Senior, PWD, buntis"
+  },
+  "board": {
+    "title": "Mga bagong request",
+    "empty": "Walang bagong request ngayon.",
+    "ago": "{minutes} min ang nakalipas",
+    "forward": "Ipasa sa kapitan",
+    "reject": "Tanggihan",
+    "reason": "Dahilan",
+    "rejectConfirm": "Tanggihan ang request",
+    "back": "Bumalik",
+    "failed": "Hindi natuloy. Subukan ulit."
+  },
+  "counter": {
+    "pick": "Piliin ang iyong counter",
+    "use": "Gamitin ang {name}",
+    "open": "Buksan ang counter",
+    "close": "Isara ang counter",
+    "waiting": "Naghihintay: {priority} priority · {documents} dokumento · {general} general",
+    "callNext": "Tawagin ang susunod",
+    "empty": "Walang naghihintay.",
+    "callAgain": "Tawagin ulit",
+    "calledThrice": "Natawag na nang 3 beses",
+    "served": "Tapos na",
+    "missed": "Hindi dumating",
+    "release": "I-release ang dokumento",
+    "free": "Libre",
+    "missedTitle": "Mga numerong lumampas",
+    "rejoin": "Ibalik ang {code}",
+    "failed": "Hindi natuloy. Subukan ulit."
+  },
+  "release": {
+    "title": "I-release ang dokumento",
+    "fee": "Bayad: {fee}",
+    "free": "Walang bayad ang dokumentong ito.",
+    "idChecked": "Nakita ang valid ID",
+    "orNumber": "OR number",
+    "submit": "I-release",
+    "cancel": "Kanselahin",
+    "done": "Na-release na. Puwede mo na itong i-print.",
+    "print": "I-print ang dokumento",
+    "close": "Isara",
+    "failed": "Hindi natuloy. Subukan ulit."
   }
 }

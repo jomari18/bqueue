@@ -127,5 +127,47 @@
     "DOCUMENTS": "Documents",
     "GENERAL": "General",
     "priorityHint": "Seniors, PWD, pregnant"
+  },
+  "board": {
+    "title": "New requests",
+    "empty": "No new requests right now.",
+    "ago": "{minutes} min ago",
+    "forward": "Forward to the kapitan",
+    "reject": "Reject",
+    "reason": "Reason",
+    "rejectConfirm": "Reject request",
+    "back": "Back",
+    "failed": "That didn't go through. Try again."
+  },
+  "counter": {
+    "pick": "Pick your counter",
+    "use": "Use {name}",
+    "open": "Open counter",
+    "close": "Close counter",
+    "waiting": "Waiting: {priority} priority · {documents} documents · {general} general",
+    "callNext": "Call next",
+    "empty": "No one is waiting.",
+    "callAgain": "Call again",
+    "calledThrice": "Called 3 times",
+    "served": "Served",
+    "missed": "Missed",
+    "release": "Release document",
+    "free": "Free",
+    "missedTitle": "Missed numbers",
+    "rejoin": "Rejoin {code}",
+    "failed": "That didn't go through. Try again."
+  },
+  "release": {
+    "title": "Release document",
+    "fee": "Fee: {fee}",
+    "free": "No fee for this document.",
+    "idChecked": "Valid ID shown",
+    "orNumber": "OR number",
+    "submit": "Release",
+    "cancel": "Cancel",
+    "done": "Released. You can print it now.",
+    "print": "Print document",
+    "close": "Close",
+    "failed": "That didn't go through. Try again."
   }
 }
