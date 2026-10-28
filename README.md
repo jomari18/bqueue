@@ -12,7 +12,11 @@ that anyone can scan to check that it is real.
   kapitan, staff, a resident, a TV link and a kiosk link. The free server can take up to a minute to wake up.
 - **Languages:** English and Filipino, on every screen.
 
-<!-- Screenshot added at go-live (Task 35). -->
+![The B.Queue landing page](docs/screenshots/landing.png)
+
+The hall TV at 1080p, calling numbers with a chime and a Filipino or English voice:
+
+![The Now Serving TV display](docs/screenshots/tv-display.png)
 
 ## Architecture
 
