@@ -330,5 +330,45 @@
     "validUntil": "May bisa hanggang {date}",
     "signed": "Elektronikong nilagdaan ni {name}, Punong Barangay, noong {date}",
     "scan": "I-scan para suriin ang dokumentong ito"
+  },
+  "landing": {
+    "headline": "Wala nang mahabang pila sa barangay hall.",
+    "tryDemo": "Subukan ang demo",
+    "opening": "Binubuksan ang iyong barangay… (hanggang isang minuto bago magising ang libreng server)",
+    "demoFailed": "Hindi mabuksan ang demo barangay. Subukan ulit.",
+    "signIn": "Mag-sign in",
+    "demoNote": "May sarili kang demo barangay sa loob ng 24 oras, may kapitan, staff at residenteng puwedeng subukan.",
+    "annotation": "Ang numero mo, live sa iyong phone",
+    "cardServingLabel": "Tinatawag ngayon",
+    "cardServingHint": "Counter 2",
+    "cardReadyLabel": "Barangay Clearance",
+    "cardReadyValue": "Handa nang kunin",
+    "cardReadyHint": "Magdala ng valid ID",
+    "ticketLabel": "Ang numero mo",
+    "ticketCounter": "Linya ng dokumento",
+    "ctaTitle": "Makita itong gumana sa loob ng isang minuto",
+    "ctaBody": "Buksan ang counter, tumawag ng numero, at panoorin itong tumunog sa TV at sa phone ng residente.",
+    "footer": "B.Queue · isang portfolio project. Binubura ang mga demo barangay at ang data nila pagkalipas ng 24 oras.",
+    "verifyLink": "Suriin ang dokumento",
+    "credits": "Credits",
+    "features": {
+      "title": "Ano ang ginagawa ng B.Queue",
+      "requests": {
+        "title": "Mag-request ng dokumento online",
+        "body": "Puwedeng humingi ang residente ng clearance, residency o indigency mula sa phone at sundan ang bawat hakbang hanggang maging handa."
+      },
+      "queue": {
+        "title": "Live na pila",
+        "body": "Kumuha ng numero mula sa bahay o sa kiosk, tingnan kung ilan ang nauuna, at makatanggap ng alerto kapag malapit na ang turn mo."
+      },
+      "tv": {
+        "title": "Tinatawag ng TV ang numero mo",
+        "body": "Ipinapakita ng TV sa hall kung sino ang sine-serve at binabasa nang malakas ang numero sa Filipino o English."
+      },
+      "verify": {
+        "title": "QR verification",
+        "body": "May QR code ang bawat na-release na dokumento. Puwede itong i-scan ng kahit sino para malaman kung tunay at may bisa pa."
+      }
+    }
   }
 }

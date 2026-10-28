@@ -330,5 +330,45 @@
     "validUntil": "Valid until {date}",
     "signed": "Signed electronically by {name}, Punong Barangay, on {date}",
     "scan": "Scan to verify this document"
+  },
+  "landing": {
+    "headline": "No more lines at the barangay hall.",
+    "tryDemo": "Try the demo",
+    "opening": "Opening your barangay… (the free server takes up to a minute to wake up)",
+    "demoFailed": "We couldn't open a demo barangay. Please try again.",
+    "signIn": "Sign in",
+    "demoNote": "You get your own demo barangay for 24 hours, with a kapitan, staff and a resident to try.",
+    "annotation": "Your number, live on your phone",
+    "cardServingLabel": "Now serving",
+    "cardServingHint": "Counter 2",
+    "cardReadyLabel": "Barangay Clearance",
+    "cardReadyValue": "Ready for pickup",
+    "cardReadyHint": "Bring a valid ID",
+    "ticketLabel": "Your number",
+    "ticketCounter": "Documents lane",
+    "ctaTitle": "See it work in a minute",
+    "ctaBody": "Open the counter, call a number, and watch it ring on the TV and on a resident's phone.",
+    "footer": "B.Queue · a portfolio project. Demo barangays and their data are deleted after 24 hours.",
+    "verifyLink": "Verify a document",
+    "credits": "Credits",
+    "features": {
+      "title": "What B.Queue does",
+      "requests": {
+        "title": "Request documents online",
+        "body": "Residents ask for a clearance, residency or indigency certificate from their phone and follow each step until it is ready."
+      },
+      "queue": {
+        "title": "A live queue",
+        "body": "Take a number from home or the kiosk, see how many are ahead, and get an alert when it is almost your turn."
+      },
+      "tv": {
+        "title": "The TV calls your number",
+        "body": "The hall's TV shows who is being served and reads the number aloud in Filipino or English."
+      },
+      "verify": {
+        "title": "QR verification",
+        "body": "Every released document carries a QR code. Anyone can scan it to check that it is real and still valid."
+      }
+    }
   }
 }
