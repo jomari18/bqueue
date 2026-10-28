@@ -1,0 +1,29 @@
+/* The released document on A4 paper (spec 11.3). On screen it is a sheet; on paper only the sheet prints. */
+@page {
+  size: A4;
+  margin: 16mm;
+}
+
+.print-sheet {
+  width: 210mm;
+  min-height: 297mm;
+  padding: 16mm;
+  margin: 0 auto;
+  background: #fff;
+  color: #1b1f1d;
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+  .print-sheet {
+    width: auto;
+    min-height: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+  .no-print {
+    display: none !important;
+  }
+}

@@ -287,5 +287,48 @@
     "missingKey": "Walang kiosk key ang link na ito. Buksan ang kiosk link mula sa demo panel o sa settings ng kapitan.",
     "missingToken": "Kulang ang tracking link na ito. I-scan ulit ang QR sa iyong ticket.",
     "loading": "Hinahanap ang iyong numero…"
+  },
+  "verify": {
+    "title": "Suriin ang dokumento",
+    "intro": "I-type ang code na nakaimprenta sa ilalim ng QR ng dokumento ng barangay.",
+    "label": "Verification code",
+    "submit": "Suriin",
+    "invalid": "Tingnan ang code: 10 letra at numero.",
+    "checking": "Sinusuri…",
+    "failed": "Hindi masuri ngayon. Subukan ulit mamaya.",
+    "status": {
+      "VALID": "Tunay na dokumento",
+      "EXPIRED": "Expired na ang dokumentong ito",
+      "REVOKED": "Binawi ang dokumentong ito",
+      "NOT_FOUND": "Walang dokumentong may ganitong code"
+    },
+    "notFoundHint": "Itugma ang bawat character sa nakaimprentang code. Pareho ang O at 0, at ang I, L at 1.",
+    "document": "Dokumento",
+    "name": "Pangalan",
+    "issued": "Inisyu",
+    "validUntil": "May bisa hanggang",
+    "barangay": "Barangay"
+  },
+  "print": {
+    "print": "I-print",
+    "notReleased": "Hindi pa na-release ang dokumentong ito.",
+    "failed": "Hindi ma-load ang dokumento. Subukan ulit mamaya.",
+    "republic": "Republika ng Pilipinas",
+    "toWhom": "SA KINAUUKULAN:",
+    "body": "Pinatutunayan nito na si {name}, {civil}, ng Purok {purok}, {address}, {barangay}, {city}, ay naninirahan sa barangay na ito nang {years} taon.",
+    "business": "Saklaw din nito ang negosyong {business} na nasa barangay na ito.",
+    "purpose": "Inisyu ito ayon sa kahilingan para sa {purpose}.",
+    "civil": {
+      "SINGLE": "walang asawa",
+      "MARRIED": "may asawa",
+      "WIDOWED": "balo",
+      "SEPARATED": "hiwalay"
+    },
+    "fee": "Bayad: {fee} · OR No. {or}",
+    "free": "Libre",
+    "issued": "Inisyu noong {date}",
+    "validUntil": "May bisa hanggang {date}",
+    "signed": "Elektronikong nilagdaan ni {name}, Punong Barangay, noong {date}",
+    "scan": "I-scan para suriin ang dokumentong ito"
   }
 }

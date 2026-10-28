@@ -287,5 +287,48 @@
     "missingKey": "This link has no kiosk key. Open the kiosk link from the demo panel or the kapitan's settings.",
     "missingToken": "This tracking link is incomplete. Scan the QR on your ticket again.",
     "loading": "Finding your number…"
+  },
+  "verify": {
+    "title": "Verify a document",
+    "intro": "Type the code printed under the QR on a barangay document.",
+    "label": "Verification code",
+    "submit": "Verify",
+    "invalid": "Check the code: 10 letters and numbers.",
+    "checking": "Checking…",
+    "failed": "We couldn't check right now. Try again in a moment.",
+    "status": {
+      "VALID": "Valid document",
+      "EXPIRED": "This document has expired",
+      "REVOKED": "This document was revoked",
+      "NOT_FOUND": "No document has this code"
+    },
+    "notFoundHint": "Check each character against the printed code. O and 0, and I, L and 1, count as the same.",
+    "document": "Document",
+    "name": "Name",
+    "issued": "Issued",
+    "validUntil": "Valid until",
+    "barangay": "Barangay"
+  },
+  "print": {
+    "print": "Print",
+    "notReleased": "This document is not released yet.",
+    "failed": "We couldn't load this document. Try again in a moment.",
+    "republic": "Republic of the Philippines",
+    "toWhom": "TO WHOM IT MAY CONCERN:",
+    "body": "This certifies that {name}, {civil}, of Purok {purok}, {address}, {barangay}, {city}, has lived in this barangay for {years, plural, one {# year} other {# years}}.",
+    "business": "This also covers the business {business}, operating in this barangay.",
+    "purpose": "This is issued upon request for {purpose}.",
+    "civil": {
+      "SINGLE": "single",
+      "MARRIED": "married",
+      "WIDOWED": "widowed",
+      "SEPARATED": "separated"
+    },
+    "fee": "Fee: {fee} · OR No. {or}",
+    "free": "Free",
+    "issued": "Issued {date}",
+    "validUntil": "Valid until {date}",
+    "signed": "Signed electronically by {name}, Punong Barangay, on {date}",
+    "scan": "Scan to verify this document"
   }
 }
