@@ -370,5 +370,14 @@
         "body": "Every released document carries a QR code. Anyone can scan it to check that it is real and still valid."
       }
     }
+  },
+  "credits": {
+    "title": "Credits",
+    "design": "Design",
+    "scene": "3D scene",
+    "fonts": "Fonts",
+    "icons": "Icons and libraries",
+    "sounds": "Sounds",
+    "soundsBody": "The TV chime and the phone alert are B.Queue's own, made from sine tones by tools/make-sounds.mjs."
   }
 }
