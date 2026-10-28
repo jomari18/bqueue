@@ -71,6 +71,22 @@ body {
   line-height: 1;
 }
 
+/* A new call pulses the TV banner for 5 seconds (spec 10). */
+@keyframes call-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.02);
+    filter: brightness(1.15);
+  }
+}
+.animate-call {
+  animation: call-pulse 1s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

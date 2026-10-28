@@ -260,5 +260,18 @@
     "newKioskLink": "New kiosk link. Copy it now; it is shown only once.",
     "simulator": "Practice crowd",
     "simulatorHint": "Pretend residents join the line and request documents so the demo stays busy. It pauses while people use the barangay."
+  },
+  "display": {
+    "startTitle": "Now Serving display",
+    "startBody": "Choose the language the TV speaks, then tap Start so it may play sound.",
+    "language": "Language",
+    "start": "Start display",
+    "missingKey": "This link has no display key. Open the TV link from the demo panel or the kapitan's settings.",
+    "nowServing": "Now serving",
+    "noCalls": "No calls yet",
+    "counters": "Counters",
+    "recent": "Recent calls",
+    "waiting": "Waiting",
+    "paused": "Display paused. Tap to resume"
   }
 }

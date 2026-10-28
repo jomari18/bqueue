@@ -260,5 +260,18 @@
     "newKioskLink": "Bagong link ng kiosk. Kopyahin na ngayon; isang beses lang itong ipapakita.",
     "simulator": "Practice na mga tao",
     "simulatorHint": "Mga kunwaring residente na pumipila at nagre-request para laging may galaw ang demo. Humihinto ito habang may gumagamit sa barangay."
+  },
+  "display": {
+    "startTitle": "Display ng Tinatawag",
+    "startBody": "Piliin ang wikang sasabihin ng TV, saka pindutin ang Simulan para makapagpatugtog ito.",
+    "language": "Wika",
+    "start": "Simulan ang display",
+    "missingKey": "Walang display key ang link na ito. Buksan ang TV link mula sa demo panel o sa settings ng kapitan.",
+    "nowServing": "Tinatawag ngayon",
+    "noCalls": "Wala pang tinatawag",
+    "counters": "Mga counter",
+    "recent": "Mga huling tinawag",
+    "waiting": "Naghihintay",
+    "paused": "Naka-pause ang display. Pindutin para ituloy"
   }
 }
