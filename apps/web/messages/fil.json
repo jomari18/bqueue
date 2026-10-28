@@ -273,5 +273,19 @@
     "recent": "Mga huling tinawag",
     "waiting": "Naghihintay",
     "paused": "Naka-pause ang display. Pindutin para ituloy"
+  },
+  "kiosk": {
+    "title": "Kumuha ng numero",
+    "pick": "Pindutin ang iyong linya para kumuha ng numero.",
+    "waiting": "{count} naghihintay",
+    "printing": "Kinukuha ang iyong numero…",
+    "offline": "Hindi maabot ang sistema ng barangay.",
+    "slowDown": "Maghintay sandali, saka subukan ulit.",
+    "retry": "Subukan ulit",
+    "scan": "I-scan para masubaybayan ang numero sa iyong phone",
+    "done": "Tapos na",
+    "missingKey": "Walang kiosk key ang link na ito. Buksan ang kiosk link mula sa demo panel o sa settings ng kapitan.",
+    "missingToken": "Kulang ang tracking link na ito. I-scan ulit ang QR sa iyong ticket.",
+    "loading": "Hinahanap ang iyong numero…"
   }
 }

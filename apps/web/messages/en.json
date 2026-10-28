@@ -273,5 +273,19 @@
     "recent": "Recent calls",
     "waiting": "Waiting",
     "paused": "Display paused. Tap to resume"
+  },
+  "kiosk": {
+    "title": "Get a number",
+    "pick": "Tap your line to get a number.",
+    "waiting": "{count} waiting",
+    "printing": "Getting your number…",
+    "offline": "We couldn't reach the barangay system.",
+    "slowDown": "Please wait a moment, then try again.",
+    "retry": "Try again",
+    "scan": "Scan to follow your number on your phone",
+    "done": "Done",
+    "missingKey": "This link has no kiosk key. Open the kiosk link from the demo panel or the kapitan's settings.",
+    "missingToken": "This tracking link is incomplete. Scan the QR on your ticket again.",
+    "loading": "Finding your number…"
   }
 }
