@@ -347,8 +347,6 @@
     "cardReadyLabel": "Barangay Clearance",
     "cardReadyValue": "Handa nang kunin",
     "cardReadyHint": "Magdala ng valid ID",
-    "ticketLabel": "Ang numero mo",
-    "ticketCounter": "Linya ng dokumento",
     "ctaTitle": "Makita itong gumana sa loob ng isang minuto",
     "ctaBody": "Buksan ang counter, tumawag ng numero, at panoorin itong tumunog sa TV at sa phone ng residente.",
     "footer": "B.Queue · isang portfolio project. Binubura ang mga demo barangay at ang data nila pagkalipas ng 24 oras.",

@@ -20,7 +20,7 @@ function setWebgl(works: boolean) {
     (() => (works ? { getExtension: () => ({ loseContext: () => undefined }) } : null)) as unknown as HTMLCanvasElement["getContext"],
   );
 }
-const ALT = "A green B.Queue ticket, D-012, behind ribbed glass";
+const ALT = "A green B.Queue ticket";
 
 describe("ticket stage", () => {
   beforeEach(() => {

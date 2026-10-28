@@ -347,8 +347,6 @@
     "cardReadyLabel": "Barangay Clearance",
     "cardReadyValue": "Ready for pickup",
     "cardReadyHint": "Bring a valid ID",
-    "ticketLabel": "Your number",
-    "ticketCounter": "Documents lane",
     "ctaTitle": "See it work in a minute",
     "ctaBody": "Open the counter, call a number, and watch it ring on the TV and on a resident's phone.",
     "footer": "B.Queue · a portfolio project. Demo barangays and their data are deleted after 24 hours.",

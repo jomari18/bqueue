@@ -51,15 +51,12 @@ function FloatingCard({ className, label, value, hint }: { className: string; la
   );
 }
 
-/** The ticket the 3D stage shows, drawn flat: what visitors see before the scene loads or without WebGL. */
+/** The B.Queue ticket drawn flat, for a Hero without a stage. */
 export function TicketStill() {
-  const t = useTranslations("landing");
   return (
     <div className="grid size-full place-items-center rounded-card bg-gradient-to-br from-accent-tint to-bg">
       <div className="flex w-4/5 flex-col items-center gap-2 rounded-[28px] bg-accent px-6 py-8 text-on-accent shadow-card ring-2 ring-lime sm:w-3/5 sm:px-8 sm:py-10">
-        <span className="whitespace-nowrap text-xs font-semibold uppercase tracking-[0.15em] sm:text-sm sm:tracking-[0.2em]">{t("ticketLabel")}</span>
-        <span className="font-heading text-5xl font-bold sm:text-7xl">D-012</span>
-        <span className="text-sm opacity-90">{t("ticketCounter")}</span>
+        <span className="font-heading text-5xl font-bold sm:text-7xl">B.Queue</span>
       </div>
     </div>
   );

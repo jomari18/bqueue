@@ -53,7 +53,7 @@ test("with reduced motion the landing shows only the still picture", async ({ br
   await page.goto("/");
   await page.keyboard.press("Shift");
   await page.mouse.move(200, 200);
-  await expect(page.getByRole("img", { name: "A green B.Queue ticket, D-012, behind ribbed glass" })).toBeVisible();
+  await expect(page.getByRole("img", { name: "A green B.Queue ticket" })).toBeVisible();
   await page.waitForTimeout(1_000);
   await expect(page.getByTestId("ticket-canvas")).toHaveCount(0);
   await context.close();

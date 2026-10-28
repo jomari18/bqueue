@@ -3,7 +3,7 @@
 import { Component, lazy, type ReactNode, Suspense, useEffect, useState, useSyncExternalStore } from "react";
 
 const STILL_SRC = "/ticket-still.webp";
-export const STILL_ALT = "A green B.Queue ticket, D-012, behind ribbed glass";
+export const STILL_ALT = "A green B.Queue ticket";
 const REDUCE_MOTION = "(prefers-reduced-motion: reduce)";
 
 // three.js is most of the landing's weight, so the scene is its own chunk, fetched only when it will play.
@@ -56,7 +56,7 @@ class SceneBoundary extends Component<{ fallback: ReactNode; children: ReactNode
 }
 
 /**
- * Spec 11.4: the reeded-glass ticket, or its still picture under reduced motion or without WebGL. The still shows
+ * The floating B.Queue ticket, or its still picture under reduced motion or without WebGL. The still shows
  * until the visitor moves and the chunk arrives, and stays behind the canvas until it draws.
  */
 export function TicketStage() {

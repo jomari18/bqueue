@@ -4,8 +4,8 @@ import { ContactShadows, Environment, Float, Lightformer } from "@react-three/dr
 import { Canvas } from "@react-three/fiber";
 import { type RefObject, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { STILL_ALT } from "../TicketStage";
+import { createSpin, dragBy, release } from "./dragSpin";
 import { qualityFor } from "./quality";
-import { Slats } from "./Slats";
 import { TicketCard } from "./TicketCard";
 import { useScrollFlip } from "./useScrollFlip";
 
@@ -28,12 +28,14 @@ function useScenePaused(stage: RefObject<Element | null>): boolean {
   return hidden || outOfView;
 }
 
-/** Spec 11.4: the ticket behind reeded glass on a mint backdrop. TicketStage loads this chunk only where it plays. */
+/** The landing's floating B.Queue ticket on a mint backdrop. TicketStage loads this chunk only where it plays. */
 export function TicketScene() {
   const stage = useRef<HTMLDivElement>(null);
   const paused = useScenePaused(stage);
   const flipped = useScrollFlip(stage);
   const pointer = useRef({ x: 0, y: 0 });
+  const spin = useRef(createSpin());
+  const last = useRef<{ x: number; y: number; touch: boolean } | null>(null);
   const [quality] = useState(() => qualityFor(window.innerWidth));
 
   useEffect(() => {
@@ -48,13 +50,38 @@ export function TicketScene() {
   }, []);
 
   return (
-    <div ref={stage} role="img" aria-label={STILL_ALT} className="size-full">
+    <div
+      ref={stage}
+      role="img"
+      aria-label={STILL_ALT}
+      // Hold the mouse button (or drag a finger sideways) to spin the ticket; vertical swipes still scroll the page.
+      className="size-full cursor-grab touch-pan-y select-none active:cursor-grabbing"
+      onPointerDown={(e) => {
+        if (e.pointerType === "mouse" && e.button !== 0) return;
+        e.currentTarget.setPointerCapture(e.pointerId);
+        last.current = { x: e.clientX, y: e.clientY, touch: e.pointerType !== "mouse" };
+      }}
+      onPointerMove={(e) => {
+        const from = last.current;
+        if (!from) return;
+        dragBy(spin.current, e.clientX - from.x, from.touch ? 0 : e.clientY - from.y);
+        last.current = { ...from, x: e.clientX, y: e.clientY };
+      }}
+      onPointerUp={() => {
+        last.current = null;
+        release(spin.current);
+      }}
+      onPointerCancel={() => {
+        last.current = null;
+        release(spin.current);
+      }}
+    >
       <Canvas
         // No tone mapping: the mint and the forest green stay the token colours instead of washing to grey.
         flat
         dpr={quality.dpr}
         frameloop={paused ? "never" : "always"}
-        camera={{ position: [0, 0, 6.2], fov: 35 }}
+        camera={{ position: [0, 0, 4.4], fov: 35 }}
         gl={{ antialias: true, powerPreference: "low-power" }}
       >
         <color attach="background" args={["#E2F1E8"]} />
@@ -65,13 +92,12 @@ export function TicketScene() {
           <Lightformer intensity={2} position={[0, 3, 4]} scale={[8, 2, 1]} />
           <Lightformer intensity={1} color="#C6F432" position={[-4, 0, 2]} scale={[2, 6, 1]} />
         </Environment>
-        <group position={[0, 0.05, -0.7]}>
+        <group position={[0, 0.05, 0]}>
           <Float speed={1.2} rotationIntensity={0.2} floatIntensity={0.4}>
-            <TicketCard pointer={pointer} flipped={flipped} />
+            <TicketCard pointer={pointer} flipped={flipped} spin={spin} />
           </Float>
         </group>
-        <Slats count={quality.slats} resolution={quality.resolution} samples={quality.samples} />
-        <ContactShadows position={[0, -1.55, 0]} opacity={0.35} blur={2.6} scale={9} far={3} color="#0F4029" />
+        <ContactShadows position={[0, -1.15, 0]} opacity={0.35} blur={2.6} scale={9} far={3} color="#0F4029" />
       </Canvas>
     </div>
   );
