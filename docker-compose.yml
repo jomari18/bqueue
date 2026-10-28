@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: bq
+      POSTGRES_PASSWORD: bq
+      POSTGRES_DB: bq_test
+    ports:
+      # Local only: the database is never reachable from the network.
+      - "127.0.0.1:55434:5432"
+    volumes:
+      - ./tools/db-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bq -d bq_test"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: bq-api
+    # Local-only values. Real secrets live in Render, Netlify and GitHub settings, never in the repo.
+    environment:
+      DATABASE_URL: postgres://bq:bq@db:5432/bq_dev
+      JWT_SECRET: local-only-jwt-secret-0123456789abcdef
+      SOCKET_TICKET_SECRET: local-only-socket-ticket-secret-012345
+      PROXY_SIGNING_SECRET: local-only-proxy-signing-secret-01234567
+      CLEANUP_SECRET: local-only-cleanup-secret-0123456789abcd
+      IP_HASH_SALT: local-only-ip-hash-salt-0123456789abcdef
+      SITE_ORIGIN: ${BQ_SITE_ORIGIN:-http://localhost:3000}
+      SIMULATOR_ENABLED: ${BQ_SIMULATOR:-true}
+    ports:
+      - "127.0.0.1:8080:8080"
+    # Forwards Ctrl+C and `docker compose down` to the server instead of waiting for the kill timeout.
+    init: true
+    depends_on:
+      db:
+        condition: service_healthy

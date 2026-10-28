@@ -1,0 +1,38 @@
+name: Clean up demo barangays
+
+# Spec 7.5: demo barangays live for 24 hours; this deletes the expired ones every day. Creating a demo also
+# deletes expired ones, so nothing piles up if GitHub pauses this schedule after 60 days without activity.
+on:
+  schedule:
+    # 03:00 in Manila (UTC+8).
+    - cron: "0 19 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  cleanup:
+    name: Delete expired demo barangays
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Nothing to clean until the site is live and its two addresses are set as repository variables.
+    if: vars.SITE_URL != '' && vars.API_URL != ''
+    steps:
+      # The free Render instance sleeps; the proxy below gives up after 26 seconds, waking takes about a minute.
+      - name: Wake the API
+        env:
+          API_URL: ${{ vars.API_URL }}
+        run: curl --fail --silent --show-error --retry 10 --retry-delay 10 --retry-all-errors --max-time 90 "$API_URL/api/health"
+      # Through Netlify, which signs the request; the secret header shows it is this job.
+      - name: Delete expired demo barangays
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+          CLEANUP_SECRET: ${{ secrets.CLEANUP_SECRET }}
+        # Each call deletes up to 20 barangays; keep calling until one finds fewer, so a backlog clears too.
+        run: |
+          for _ in $(seq 1 30); do
+            answer=$(curl --fail-with-body --silent --show-error --retry 3 --retry-delay 15 --retry-all-errors --max-time 30 \
+              -X POST -H "x-cleanup-secret: $CLEANUP_SECRET" "$SITE_URL/api/admin/cleanup") || { echo "$answer"; exit 1; }
+            echo "$answer"
+            if [ "$(echo "$answer" | jq '.deleted')" -lt 20 ]; then exit 0; fi
+          done

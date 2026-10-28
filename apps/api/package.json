@@ -1,0 +1,48 @@
+{
+  "name": "@bq/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "npm run build -w @bq/shared && tsc -p tsconfig.build.json",
+    "start": "node dist/main.js",
+    "dev": "concurrently -k \"tsc -p tsconfig.build.json --watch --preserveWatchOutput\" \"node --watch-path=dist --env-file-if-exists=.env dist/main.js\"",
+    "test": "vitest run",
+    "typecheck": "npm run build -w @bq/shared && tsc -p tsconfig.json --noEmit",
+    "postinstall": "prisma generate"
+  },
+  "devDependencies": {
+    "@nestjs/testing": "~12.3.2",
+    "@swc/core": "^1.16.20",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/express": "^5.0.6",
+    "@types/supertest": "^7.2.1",
+    "concurrently": "^10.0.6",
+    "socket.io-client": "^4.8.4",
+    "supertest": "^7.3.1",
+    "unplugin-swc": "^2.0.0"
+  },
+  "dependencies": {
+    "@bq/shared": "^0.1.0",
+    "@nestjs/common": "~12.3.2",
+    "@nestjs/core": "~12.3.2",
+    "@nestjs/platform-express": "~12.3.2",
+    "@nestjs/platform-socket.io": "~12.3.2",
+    "@nestjs/websockets": "~12.3.2",
+    "@node-rs/argon2": "^2.2.2",
+    "@prisma/adapter-pg": "^7.10.1",
+    "@prisma/client": "^7.10.1",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^18.0.9",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.1",
+    "helmet": "^8.3.0",
+    "jose": "^6.2.13",
+    "pino": "^10.4.0",
+    "prisma": "^7.10.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "~7.8.2",
+    "socket.io": "^4.8.4",
+    "zod": "~4.6.7"
+  }
+}

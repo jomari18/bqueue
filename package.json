@@ -1,0 +1,32 @@
+{
+  "name": "bqueue",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "vitest run",
+    "test:api": "npm run test -w @bq/api",
+    "test:e2e": "playwright test",
+    "build": "npm run build --workspaces --if-present"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.11.1",
+    "@eslint/js": "^9.39.5",
+    "@playwright/test": "1.64.1",
+    "@types/node": "^24.19.2",
+    "eslint": "~9.39.5",
+    "globals": "^17.13.0",
+    "jose": "^6.2.13",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "~8.72.1",
+    "vitest": "~5.0.5"
+  }
+}

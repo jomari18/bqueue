@@ -1,0 +1,386 @@
+{
+  "brand": {
+    "name": "B.Queue",
+    "tagline": "Mga request sa barangay at live na pila, iisang lugar lang."
+  },
+  "nav": {
+    "label": "Pangunahing navigation",
+    "home": "Home",
+    "myRequests": "Mga request ko",
+    "myTicket": "Ticket ko",
+    "board": "Board",
+    "counter": "Counter",
+    "approvals": "Aaprubahan",
+    "reports": "Ulat",
+    "settings": "Settings"
+  },
+  "language": {
+    "label": "Wika",
+    "en": "EN",
+    "fil": "FIL"
+  },
+  "common": {
+    "loading": "Naglo-load…",
+    "tryAgain": "Subukan ulit",
+    "cancel": "Kanselahin",
+    "confirm": "Kumpirmahin",
+    "close": "Isara",
+    "back": "Bumalik"
+  },
+  "errorPage": {
+    "title": "May nagkaproblema",
+    "body": "Subukan ulit. Kung mangyari pa rin, i-reload ang page."
+  },
+  "notFound": {
+    "title": "Hindi makita ang page",
+    "body": "Wala ang page na ito o nailipat na.",
+    "home": "Pumunta sa home page"
+  },
+  "shell": {
+    "waking": "Ginigising ang server… (hanggang isang minuto bago magising ang libreng server)",
+    "offline": "Hindi maabot ang server. Sinusubukan ulit…",
+    "loading": "Naglo-load…"
+  },
+  "demoEnded": {
+    "title": "Tapos na ang demo barangay na ito.",
+    "body": "Binubura ang mga demo barangay pagkalipas ng 24 oras.",
+    "start": "Magsimula ng bagong demo",
+    "linkTitle": "Hindi na gumagana ang link ng screen na ito.",
+    "linkBody": "Maaaring tapos na ang demo barangay nito, o gumawa ang kapitan ng bagong link sa Settings."
+  },
+  "demo": {
+    "title": "Demo panel",
+    "switchRole": "Palitan ang role",
+    "roleKapitan": "Kapitan",
+    "roleStaff": "Staff – Counter 2",
+    "roleResident": "Residente – Juan Dela Cruz",
+    "openTv": "Buksan ang TV display",
+    "openKiosk": "Buksan ang kiosk",
+    "simulator": "Simulated na residente",
+    "simulatorHint": "Lumipat sa Kapitan para mabago ito",
+    "expires": "Demo barangay, mabubura sa loob ng {hours} oras",
+    "qrLabel": "QR code para buksan ang resident view sa phone",
+    "qrHelp": "I-scan gamit ang phone para pumasok bilang si Juan Dela Cruz.",
+    "newQr": "Bagong QR code"
+  },
+  "join": {
+    "joining": "Binubuksan ang resident view…",
+    "expired": "Expired na ang QR code na ito. Humingi ng bago sa demo panel."
+  },
+  "login": {
+    "title": "Mag-sign in",
+    "username": "Username",
+    "secret": "Password o PIN",
+    "submit": "Mag-sign in",
+    "failed": "Hindi makapag-sign in. Subukan ulit."
+  },
+  "connection": {
+    "reconnecting": "Kumokonekta ulit…"
+  },
+  "resident": {
+    "homeTitle": "Ano ang kailangan mo?",
+    "homeHelp": "Pumili ng dokumento, saka sabihin kung para saan.",
+    "free": "Libre",
+    "quickPurposes": "Karaniwang layunin",
+    "purpose": {
+      "employment": "Trabaho",
+      "school": "Paaralan",
+      "bank": "Bangko",
+      "travel": "Biyahe",
+      "others": "Iba pa"
+    },
+    "purposeLabel": "Layunin",
+    "businessName": "Pangalan ng negosyo",
+    "submit": "Ipadala ang request",
+    "tryAgain": "Subukan ulit",
+    "submitFailed": "Hindi naipadala ang request.",
+    "myRequests": "Mga request ko",
+    "noRequests": "Wala ka pang request.",
+    "pickup": "Kumuha ng numero para sa pickup",
+    "cancel": "Kanselahin ang request",
+    "cancelConfirm": "Kanselahin ang request na ito?",
+    "cancelYes": "Oo, kanselahin",
+    "cancelNo": "Huwag"
+  },
+  "status": {
+    "SUBMITTED": "Naipadala",
+    "FOR_APPROVAL": "Para sa pag-apruba",
+    "READY_FOR_PICKUP": "Puwede nang kunin",
+    "RELEASED": "Nakuha na",
+    "REJECTED": "Hindi naaprubahan",
+    "CANCELLED": "Kinansela"
+  },
+  "ticket": {
+    "title": "Ticket ko",
+    "near": "Malapit ka na. Maghanda na.",
+    "called": "Ikaw na! {counter}",
+    "ok": "OK",
+    "next": "Ikaw na ang susunod",
+    "eta": "{ahead} pa ang nauna · mga {minutes} min",
+    "served": "Tapos na. Salamat!",
+    "expired": "Expired na ang numerong ito.",
+    "missed": "Nalampasan ang tawag sa iyo.",
+    "rejoin": "Bumalik sa pila",
+    "getNumber": "Kumuha ng numero",
+    "takeFailed": "Hindi nakakuha ng numero."
+  },
+  "lanes": {
+    "PRIORITY": "Priority",
+    "DOCUMENTS": "Dokumento",
+    "GENERAL": "Pangkalahatan",
+    "priorityHint": "Senior, PWD, buntis"
+  },
+  "board": {
+    "title": "Mga bagong request",
+    "empty": "Walang bagong request ngayon.",
+    "ago": "{minutes} min ang nakalipas",
+    "forward": "Ipasa sa kapitan",
+    "reject": "Tanggihan",
+    "reason": "Dahilan",
+    "rejectConfirm": "Tanggihan ang request",
+    "back": "Bumalik",
+    "failed": "Hindi natuloy. Subukan ulit."
+  },
+  "counter": {
+    "pick": "Piliin ang iyong counter",
+    "use": "Gamitin ang {name}",
+    "open": "Buksan ang counter",
+    "close": "Isara ang counter",
+    "waiting": "Naghihintay: {priority} priority · {documents} dokumento · {general} general",
+    "callNext": "Tawagin ang susunod",
+    "empty": "Walang naghihintay.",
+    "callAgain": "Tawagin ulit",
+    "calledThrice": "Natawag na nang 3 beses",
+    "served": "Tapos na",
+    "missed": "Hindi dumating",
+    "release": "I-release ang dokumento",
+    "free": "Libre",
+    "missedTitle": "Mga numerong lumampas",
+    "rejoin": "Ibalik ang {code}",
+    "failed": "Hindi natuloy. Subukan ulit.",
+    "releaseFirst": "I-release muna ang dokumento bago markahang tapos."
+  },
+  "release": {
+    "title": "I-release ang dokumento",
+    "fee": "Bayad: {fee}",
+    "free": "Walang bayad ang dokumentong ito.",
+    "idChecked": "Nakita ang valid ID",
+    "orNumber": "OR number",
+    "submit": "I-release",
+    "cancel": "Kanselahin",
+    "done": "Na-release na. Puwede mo na itong i-print.",
+    "print": "I-print ang dokumento",
+    "close": "Isara",
+    "failed": "Hindi natuloy. Subukan ulit."
+  },
+  "approvals": {
+    "title": "Para sa iyong pag-apruba",
+    "empty": "Walang naghihintay ng iyong pag-apruba.",
+    "free": "Libre",
+    "approve": "Aprubahan at pirmahan",
+    "reject": "Tanggihan",
+    "reason": "Dahilan",
+    "rejectConfirm": "Tanggihan ang request",
+    "back": "Bumalik",
+    "dialogTitle": "Aprubahan at pirmahan",
+    "signedBy": "Elektronikong nilagdaan ni {name}",
+    "signNote": "Ang iyong pangalan at ang oras ay ilalagay sa dokumento bilang iyong pirma.",
+    "sign": "Pirmahan at aprubahan",
+    "cancel": "Kanselahin",
+    "failed": "Hindi natuloy. Subukan ulit."
+  },
+  "released": {
+    "title": "Mga na-release na dokumento",
+    "empty": "Wala pang na-release na dokumento.",
+    "revoked": "Binawi",
+    "revoke": "Bawiin",
+    "dialogTitle": "Bawiin ang dokumento",
+    "warning": "Sasabihin ng QR check na binawi ito, kasama ang iyong dahilan.",
+    "reason": "Dahilan",
+    "confirm": "Bawiin ang dokumento",
+    "cancel": "Kanselahin",
+    "failed": "Hindi natuloy. Subukan ulit."
+  },
+  "reports": {
+    "title": "Mga ulat",
+    "range": "Saklaw",
+    "ranges": {
+      "today": "Ngayon",
+      "7d": "7 araw",
+      "30d": "30 araw"
+    },
+    "released": "Na-release na dokumento",
+    "fees": "Nakolektang bayad",
+    "avgDays": "Karaniwang araw bago maging handa",
+    "noShow": "Hindi dumating",
+    "byHour": "Mga ticket bawat oras",
+    "chartSummary": "Mga ticket bawat oras, pinakamarami {hour} na may {count}",
+    "chartEmpty": "Mga ticket bawat oras: wala pa sa saklaw na ito",
+    "lanesTitle": "Mga linya",
+    "lane": "Linya",
+    "tickets": "Ticket",
+    "avgWait": "Karaniwang hintay (min)",
+    "avgService": "Karaniwang serbisyo (min)",
+    "noShowCol": "Hindi dumating"
+  },
+  "settings": {
+    "title": "Settings",
+    "failed": "Hindi natuloy. Subukan ulit.",
+    "cancel": "Kanselahin",
+    "save": "I-save",
+    "typesTitle": "Mga dokumento at bayad",
+    "feeNote": "Hindi magbabago ang bayad ng mga request na naipasa na.",
+    "feeFor": "Bayad para sa {name}",
+    "saveFee": "I-save ang bayad",
+    "feeInvalid": "Mag-type ng halaga gaya ng 150 o ₱150.",
+    "active": "Puwedeng i-request ng residente",
+    "inactive": "Hindi aktibo",
+    "turnOff": "Patayin",
+    "turnOn": "Buksan",
+    "countersTitle": "Mga counter",
+    "counterName": "Pangalan ng {name}",
+    "newCounter": "Pangalan ng bagong counter",
+    "addCounter": "Magdagdag ng counter",
+    "staffTitle": "Mga staff",
+    "staffName": "Pangalan",
+    "pin": "PIN",
+    "addStaff": "Magdagdag ng staff",
+    "pinHint": "6 na numero, hindi pare-pareho at hindi sunod-sunod gaya ng 123456.",
+    "pinDigits": "Ang PIN ay may 6 na numero.",
+    "pinWeak": "Pumili ng PIN na mas mahirap hulaan.",
+    "resetPin": "I-reset ang PIN",
+    "newPin": "Bagong PIN",
+    "savePin": "I-save ang PIN",
+    "deactivate": "I-deactivate",
+    "activate": "I-activate",
+    "confirmDeactivate": "Oo, i-deactivate si {name}",
+    "keysTitle": "Mga link ng screen",
+    "rotateDisplay": "Bagong link ng TV",
+    "rotateKiosk": "Bagong link ng kiosk",
+    "rotateWarning": "Madidiskonekta ang mga screen na gumagamit ng lumang link.",
+    "rotateConfirm": "Gawin ang bagong link",
+    "newDisplayLink": "Bagong link ng TV. Kopyahin na ngayon; isang beses lang itong ipapakita.",
+    "newKioskLink": "Bagong link ng kiosk. Kopyahin na ngayon; isang beses lang itong ipapakita.",
+    "simulator": "Practice na mga tao",
+    "simulatorHint": "Mga kunwaring residente na pumipila at nagre-request para laging may galaw ang demo. Humihinto ito habang may gumagamit sa barangay."
+  },
+  "display": {
+    "startTitle": "Display ng Tinatawag",
+    "startBody": "Piliin ang wikang sasabihin ng TV, saka pindutin ang Simulan para makapagpatugtog ito.",
+    "language": "Wika",
+    "start": "Simulan ang display",
+    "missingKey": "Walang display key ang link na ito. Buksan ang TV link mula sa demo panel o sa settings ng kapitan.",
+    "nowServing": "Tinatawag ngayon",
+    "noCalls": "Wala pang tinatawag",
+    "counters": "Mga counter",
+    "recent": "Mga huling tinawag",
+    "waiting": "Naghihintay",
+    "paused": "Naka-pause ang display. Pindutin para ituloy"
+  },
+  "kiosk": {
+    "title": "Kumuha ng numero",
+    "pick": "Pindutin ang iyong linya para kumuha ng numero.",
+    "waiting": "{count} naghihintay",
+    "printing": "Kinukuha ang iyong numero…",
+    "offline": "Hindi maabot ang sistema ng barangay.",
+    "slowDown": "Maghintay sandali, saka subukan ulit.",
+    "retry": "Subukan ulit",
+    "scan": "I-scan para masubaybayan ang numero sa iyong phone",
+    "done": "Tapos na",
+    "missingKey": "Walang kiosk key ang link na ito. Buksan ang kiosk link mula sa demo panel o sa settings ng kapitan.",
+    "missingToken": "Kulang ang tracking link na ito. I-scan ulit ang QR sa iyong ticket.",
+    "loading": "Hinahanap ang iyong numero…"
+  },
+  "verify": {
+    "title": "Suriin ang dokumento",
+    "intro": "I-type ang code na nakaimprenta sa ilalim ng QR ng dokumento ng barangay.",
+    "label": "Verification code",
+    "submit": "Suriin",
+    "invalid": "Tingnan ang code: 10 letra at numero.",
+    "checking": "Sinusuri…",
+    "failed": "Hindi masuri ngayon. Subukan ulit mamaya.",
+    "status": {
+      "VALID": "Tunay na dokumento",
+      "EXPIRED": "Expired na ang dokumentong ito",
+      "REVOKED": "Binawi ang dokumentong ito",
+      "NOT_FOUND": "Walang dokumentong may ganitong code"
+    },
+    "notFoundHint": "Itugma ang bawat character sa nakaimprentang code. Pareho ang O at 0, at ang I, L at 1.",
+    "document": "Dokumento",
+    "name": "Pangalan",
+    "issued": "Inisyu",
+    "validUntil": "May bisa hanggang",
+    "barangay": "Barangay"
+  },
+  "print": {
+    "print": "I-print",
+    "notReleased": "Hindi pa na-release ang dokumentong ito.",
+    "failed": "Hindi ma-load ang dokumento. Subukan ulit mamaya.",
+    "republic": "Republika ng Pilipinas",
+    "toWhom": "SA KINAUUKULAN:",
+    "body": "Pinatutunayan nito na si {name}, {civil}, ng Purok {purok}, {address}, {barangay}, {city}, ay naninirahan sa barangay na ito nang {years} taon.",
+    "business": "Saklaw din nito ang negosyong {business} na nasa barangay na ito.",
+    "purpose": "Inisyu ito ayon sa kahilingan para sa {purpose}.",
+    "civil": {
+      "SINGLE": "walang asawa",
+      "MARRIED": "may asawa",
+      "WIDOWED": "balo",
+      "SEPARATED": "hiwalay"
+    },
+    "fee": "Bayad: {fee} · OR No. {or}",
+    "free": "Libre",
+    "issued": "Inisyu noong {date}",
+    "validUntil": "May bisa hanggang {date}",
+    "signed": "Elektronikong nilagdaan ni {name}, Punong Barangay, noong {date}",
+    "scan": "I-scan para suriin ang dokumentong ito"
+  },
+  "landing": {
+    "headline": "Wala nang mahabang pila sa barangay hall.",
+    "tryDemo": "Subukan ang demo",
+    "opening": "Binubuksan ang iyong barangay… (hanggang isang minuto bago magising ang libreng server)",
+    "demoFailed": "Hindi mabuksan ang demo barangay. Subukan ulit.",
+    "signIn": "Mag-sign in",
+    "demoNote": "May sarili kang demo barangay sa loob ng 24 oras, may kapitan, staff at residenteng puwedeng subukan.",
+    "annotation": "Ang numero mo, live sa iyong phone",
+    "cardServingLabel": "Tinatawag ngayon",
+    "cardServingHint": "Counter 2",
+    "cardReadyLabel": "Barangay Clearance",
+    "cardReadyValue": "Handa nang kunin",
+    "cardReadyHint": "Magdala ng valid ID",
+    "ticketLabel": "Ang numero mo",
+    "ticketCounter": "Linya ng dokumento",
+    "ctaTitle": "Makita itong gumana sa loob ng isang minuto",
+    "ctaBody": "Buksan ang counter, tumawag ng numero, at panoorin itong tumunog sa TV at sa phone ng residente.",
+    "footer": "B.Queue · isang portfolio project. Binubura ang mga demo barangay at ang data nila pagkalipas ng 24 oras.",
+    "verifyLink": "Suriin ang dokumento",
+    "credits": "Credits",
+    "features": {
+      "title": "Ano ang ginagawa ng B.Queue",
+      "requests": {
+        "title": "Mag-request ng dokumento online",
+        "body": "Puwedeng humingi ang residente ng clearance, residency o indigency mula sa phone at sundan ang bawat hakbang hanggang maging handa."
+      },
+      "queue": {
+        "title": "Live na pila",
+        "body": "Kumuha ng numero mula sa bahay o sa kiosk, tingnan kung ilan ang nauuna, at makatanggap ng alerto kapag malapit na ang turn mo."
+      },
+      "tv": {
+        "title": "Tinatawag ng TV ang numero mo",
+        "body": "Ipinapakita ng TV sa hall kung sino ang sine-serve at binabasa nang malakas ang numero sa Filipino o English."
+      },
+      "verify": {
+        "title": "QR verification",
+        "body": "May QR code ang bawat na-release na dokumento. Puwede itong i-scan ng kahit sino para malaman kung tunay at may bisa pa."
+      }
+    }
+  },
+  "credits": {
+    "title": "Credits",
+    "design": "Disenyo",
+    "scene": "3D na eksena",
+    "fonts": "Mga font",
+    "icons": "Mga icon at library",
+    "soundsBody": "Gawa ng B.Queue ang chime ng TV at ang alerto sa phone, mula sa mga sine tone ng tools/make-sounds.mjs.",
+    "sounds": "Mga tunog"
+  }
+}

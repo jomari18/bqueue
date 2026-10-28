@@ -1,0 +1,386 @@
+{
+  "brand": {
+    "name": "B.Queue",
+    "tagline": "Barangay requests and a live queue, in one place."
+  },
+  "nav": {
+    "label": "Main navigation",
+    "home": "Home",
+    "myRequests": "My requests",
+    "myTicket": "My ticket",
+    "board": "Board",
+    "counter": "Counter",
+    "approvals": "Approvals",
+    "reports": "Reports",
+    "settings": "Settings"
+  },
+  "language": {
+    "label": "Language",
+    "en": "EN",
+    "fil": "FIL"
+  },
+  "common": {
+    "loading": "Loading…",
+    "tryAgain": "Try again",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close",
+    "back": "Back"
+  },
+  "errorPage": {
+    "title": "Something went wrong",
+    "body": "Please try again. If it keeps happening, reload the page."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "This page does not exist or was moved.",
+    "home": "Go to the home page"
+  },
+  "shell": {
+    "waking": "Waking up the server… (the free server takes up to a minute to wake up)",
+    "offline": "Can't reach the server. Retrying…",
+    "loading": "Loading…"
+  },
+  "demoEnded": {
+    "title": "This demo barangay has ended.",
+    "body": "Demo barangays are deleted after 24 hours.",
+    "start": "Start a new demo",
+    "linkTitle": "This screen's link no longer works.",
+    "linkBody": "Its demo barangay may have ended, or the kapitan made a new link in Settings."
+  },
+  "demo": {
+    "title": "Demo panel",
+    "switchRole": "Switch role",
+    "roleKapitan": "Kapitan",
+    "roleStaff": "Staff – Counter 2",
+    "roleResident": "Residente – Juan Dela Cruz",
+    "openTv": "Open TV display",
+    "openKiosk": "Open kiosk",
+    "simulator": "Simulated residents",
+    "simulatorHint": "Switch to Kapitan to change this",
+    "expires": "Demo barangay, deleted in {hours} h",
+    "qrLabel": "QR code to open the resident view on a phone",
+    "qrHelp": "Scan with a phone to join as Juan Dela Cruz.",
+    "newQr": "New QR code"
+  },
+  "join": {
+    "joining": "Opening the resident view…",
+    "expired": "This QR code has expired. Ask for a new one on the demo panel."
+  },
+  "login": {
+    "title": "Sign in",
+    "username": "Username",
+    "secret": "Password or PIN",
+    "submit": "Sign in",
+    "failed": "Could not sign in. Please try again."
+  },
+  "connection": {
+    "reconnecting": "Reconnecting…"
+  },
+  "resident": {
+    "homeTitle": "What do you need?",
+    "homeHelp": "Choose a document, then tell us what it is for.",
+    "free": "Free",
+    "quickPurposes": "Common purposes",
+    "purpose": {
+      "employment": "Employment",
+      "school": "School",
+      "bank": "Bank",
+      "travel": "Travel",
+      "others": "Others"
+    },
+    "purposeLabel": "Purpose",
+    "businessName": "Business name",
+    "submit": "Submit request",
+    "tryAgain": "Try again",
+    "submitFailed": "Could not send the request.",
+    "myRequests": "My requests",
+    "noRequests": "You have no requests yet.",
+    "pickup": "Get a number for pickup",
+    "cancel": "Cancel request",
+    "cancelConfirm": "Cancel this request?",
+    "cancelYes": "Yes, cancel it",
+    "cancelNo": "Keep it"
+  },
+  "status": {
+    "SUBMITTED": "Submitted",
+    "FOR_APPROVAL": "For approval",
+    "READY_FOR_PICKUP": "Ready for pickup",
+    "RELEASED": "Released",
+    "REJECTED": "Rejected",
+    "CANCELLED": "Cancelled"
+  },
+  "ticket": {
+    "title": "My ticket",
+    "near": "Almost your turn. Get ready.",
+    "called": "Your turn! {counter}",
+    "ok": "OK",
+    "next": "You're next",
+    "eta": "{ahead} ahead · about {minutes} min",
+    "served": "Done. Thank you!",
+    "expired": "This number has expired.",
+    "missed": "You missed your turn.",
+    "rejoin": "Rejoin the line",
+    "getNumber": "Get a number",
+    "takeFailed": "Could not get a number."
+  },
+  "lanes": {
+    "PRIORITY": "Priority",
+    "DOCUMENTS": "Documents",
+    "GENERAL": "General",
+    "priorityHint": "Seniors, PWD, pregnant"
+  },
+  "board": {
+    "title": "New requests",
+    "empty": "No new requests right now.",
+    "ago": "{minutes} min ago",
+    "forward": "Forward to the kapitan",
+    "reject": "Reject",
+    "reason": "Reason",
+    "rejectConfirm": "Reject request",
+    "back": "Back",
+    "failed": "That didn't go through. Try again."
+  },
+  "counter": {
+    "pick": "Pick your counter",
+    "use": "Use {name}",
+    "open": "Open counter",
+    "close": "Close counter",
+    "waiting": "Waiting: {priority} priority · {documents} documents · {general} general",
+    "callNext": "Call next",
+    "empty": "No one is waiting.",
+    "callAgain": "Call again",
+    "calledThrice": "Called 3 times",
+    "served": "Served",
+    "missed": "Missed",
+    "release": "Release document",
+    "free": "Free",
+    "missedTitle": "Missed numbers",
+    "rejoin": "Rejoin {code}",
+    "failed": "That didn't go through. Try again.",
+    "releaseFirst": "Release the document before marking it served."
+  },
+  "release": {
+    "title": "Release document",
+    "fee": "Fee: {fee}",
+    "free": "No fee for this document.",
+    "idChecked": "Valid ID shown",
+    "orNumber": "OR number",
+    "submit": "Release",
+    "cancel": "Cancel",
+    "done": "Released. You can print it now.",
+    "print": "Print document",
+    "close": "Close",
+    "failed": "That didn't go through. Try again."
+  },
+  "approvals": {
+    "title": "For your approval",
+    "empty": "Nothing waiting for your approval.",
+    "free": "Free",
+    "approve": "Approve and sign",
+    "reject": "Reject",
+    "reason": "Reason",
+    "rejectConfirm": "Reject request",
+    "back": "Back",
+    "dialogTitle": "Approve and sign",
+    "signedBy": "Signed electronically by {name}",
+    "signNote": "Your name and the time are printed on the document as your signature.",
+    "sign": "Sign and approve",
+    "cancel": "Cancel",
+    "failed": "That didn't go through. Try again."
+  },
+  "released": {
+    "title": "Released documents",
+    "empty": "No released documents yet.",
+    "revoked": "Revoked",
+    "revoke": "Revoke",
+    "dialogTitle": "Revoke document",
+    "warning": "Its QR check will say it was revoked, with your reason.",
+    "reason": "Reason",
+    "confirm": "Revoke document",
+    "cancel": "Cancel",
+    "failed": "That didn't go through. Try again."
+  },
+  "reports": {
+    "title": "Reports",
+    "range": "Range",
+    "ranges": {
+      "today": "Today",
+      "7d": "7 days",
+      "30d": "30 days"
+    },
+    "released": "Released documents",
+    "fees": "Fees collected",
+    "avgDays": "Average days to ready",
+    "noShow": "No-show rate",
+    "byHour": "Tickets by hour",
+    "chartSummary": "Tickets by hour, busiest {hour} with {count}",
+    "chartEmpty": "Tickets by hour: none yet in this range",
+    "lanesTitle": "Lanes",
+    "lane": "Lane",
+    "tickets": "Tickets",
+    "avgWait": "Avg wait (min)",
+    "avgService": "Avg service (min)",
+    "noShowCol": "No-show"
+  },
+  "settings": {
+    "title": "Settings",
+    "failed": "That didn't go through. Try again.",
+    "cancel": "Cancel",
+    "save": "Save",
+    "typesTitle": "Documents and fees",
+    "feeNote": "Requests already submitted keep their fee.",
+    "feeFor": "Fee for {name}",
+    "saveFee": "Save fee",
+    "feeInvalid": "Type an amount like 150 or ₱150.",
+    "active": "Residents can request this",
+    "inactive": "Inactive",
+    "turnOff": "Turn off",
+    "turnOn": "Turn on",
+    "countersTitle": "Counters",
+    "counterName": "Name of {name}",
+    "newCounter": "New counter name",
+    "addCounter": "Add counter",
+    "staffTitle": "Staff",
+    "staffName": "Name",
+    "pin": "PIN",
+    "addStaff": "Add staff",
+    "pinHint": "6 digits, not all the same and not in a row like 123456.",
+    "pinDigits": "A PIN has 6 digits.",
+    "pinWeak": "Choose a PIN that is harder to guess.",
+    "resetPin": "Reset PIN",
+    "newPin": "New PIN",
+    "savePin": "Save PIN",
+    "deactivate": "Deactivate",
+    "activate": "Activate",
+    "confirmDeactivate": "Yes, deactivate {name}",
+    "keysTitle": "Screen links",
+    "rotateDisplay": "New TV link",
+    "rotateKiosk": "New kiosk link",
+    "rotateWarning": "Screens using the old link will disconnect.",
+    "rotateConfirm": "Make the new link",
+    "newDisplayLink": "New TV link. Copy it now; it is shown only once.",
+    "newKioskLink": "New kiosk link. Copy it now; it is shown only once.",
+    "simulator": "Practice crowd",
+    "simulatorHint": "Pretend residents join the line and request documents so the demo stays busy. It pauses while people use the barangay."
+  },
+  "display": {
+    "startTitle": "Now Serving display",
+    "startBody": "Choose the language the TV speaks, then tap Start so it may play sound.",
+    "language": "Language",
+    "start": "Start display",
+    "missingKey": "This link has no display key. Open the TV link from the demo panel or the kapitan's settings.",
+    "nowServing": "Now serving",
+    "noCalls": "No calls yet",
+    "counters": "Counters",
+    "recent": "Recent calls",
+    "waiting": "Waiting",
+    "paused": "Display paused. Tap to resume"
+  },
+  "kiosk": {
+    "title": "Get a number",
+    "pick": "Tap your line to get a number.",
+    "waiting": "{count} waiting",
+    "printing": "Getting your number…",
+    "offline": "We couldn't reach the barangay system.",
+    "slowDown": "Please wait a moment, then try again.",
+    "retry": "Try again",
+    "scan": "Scan to follow your number on your phone",
+    "done": "Done",
+    "missingKey": "This link has no kiosk key. Open the kiosk link from the demo panel or the kapitan's settings.",
+    "missingToken": "This tracking link is incomplete. Scan the QR on your ticket again.",
+    "loading": "Finding your number…"
+  },
+  "verify": {
+    "title": "Verify a document",
+    "intro": "Type the code printed under the QR on a barangay document.",
+    "label": "Verification code",
+    "submit": "Verify",
+    "invalid": "Check the code: 10 letters and numbers.",
+    "checking": "Checking…",
+    "failed": "We couldn't check right now. Try again in a moment.",
+    "status": {
+      "VALID": "Valid document",
+      "EXPIRED": "This document has expired",
+      "REVOKED": "This document was revoked",
+      "NOT_FOUND": "No document has this code"
+    },
+    "notFoundHint": "Check each character against the printed code. O and 0, and I, L and 1, count as the same.",
+    "document": "Document",
+    "name": "Name",
+    "issued": "Issued",
+    "validUntil": "Valid until",
+    "barangay": "Barangay"
+  },
+  "print": {
+    "print": "Print",
+    "notReleased": "This document is not released yet.",
+    "failed": "We couldn't load this document. Try again in a moment.",
+    "republic": "Republic of the Philippines",
+    "toWhom": "TO WHOM IT MAY CONCERN:",
+    "body": "This certifies that {name}, {civil}, of Purok {purok}, {address}, {barangay}, {city}, has lived in this barangay for {years, plural, one {# year} other {# years}}.",
+    "business": "This also covers the business {business}, operating in this barangay.",
+    "purpose": "This is issued upon request for {purpose}.",
+    "civil": {
+      "SINGLE": "single",
+      "MARRIED": "married",
+      "WIDOWED": "widowed",
+      "SEPARATED": "separated"
+    },
+    "fee": "Fee: {fee} · OR No. {or}",
+    "free": "Free",
+    "issued": "Issued {date}",
+    "validUntil": "Valid until {date}",
+    "signed": "Signed electronically by {name}, Punong Barangay, on {date}",
+    "scan": "Scan to verify this document"
+  },
+  "landing": {
+    "headline": "No more lines at the barangay hall.",
+    "tryDemo": "Try the demo",
+    "opening": "Opening your barangay… (the free server takes up to a minute to wake up)",
+    "demoFailed": "We couldn't open a demo barangay. Please try again.",
+    "signIn": "Sign in",
+    "demoNote": "You get your own demo barangay for 24 hours, with a kapitan, staff and a resident to try.",
+    "annotation": "Your number, live on your phone",
+    "cardServingLabel": "Now serving",
+    "cardServingHint": "Counter 2",
+    "cardReadyLabel": "Barangay Clearance",
+    "cardReadyValue": "Ready for pickup",
+    "cardReadyHint": "Bring a valid ID",
+    "ticketLabel": "Your number",
+    "ticketCounter": "Documents lane",
+    "ctaTitle": "See it work in a minute",
+    "ctaBody": "Open the counter, call a number, and watch it ring on the TV and on a resident's phone.",
+    "footer": "B.Queue · a portfolio project. Demo barangays and their data are deleted after 24 hours.",
+    "verifyLink": "Verify a document",
+    "credits": "Credits",
+    "features": {
+      "title": "What B.Queue does",
+      "requests": {
+        "title": "Request documents online",
+        "body": "Residents ask for a clearance, residency or indigency certificate from their phone and follow each step until it is ready."
+      },
+      "queue": {
+        "title": "A live queue",
+        "body": "Take a number from home or the kiosk, see how many are ahead, and get an alert when it is almost your turn."
+      },
+      "tv": {
+        "title": "The TV calls your number",
+        "body": "The hall's TV shows who is being served and reads the number aloud in Filipino or English."
+      },
+      "verify": {
+        "title": "QR verification",
+        "body": "Every released document carries a QR code. Anyone can scan it to check that it is real and still valid."
+      }
+    }
+  },
+  "credits": {
+    "title": "Credits",
+    "design": "Design",
+    "scene": "3D scene",
+    "fonts": "Fonts",
+    "icons": "Icons and libraries",
+    "sounds": "Sounds",
+    "soundsBody": "The TV chime and the phone alert are B.Queue's own, made from sine tones by tools/make-sounds.mjs."
+  }
+}

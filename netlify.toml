@@ -1,0 +1,26 @@
+# Netlify builds the web app from the workspace root (spec 4 and 15). Next.js on Netlify's runtime routes the
+# pages, so there is no single-page fallback. The CSP comes from apps/web/src/proxy.ts, the other security headers
+# from apps/web/next.config.ts.
+[build]
+  command = "npm run build -w @bq/web"
+  publish = "apps/web/.next"
+
+[build.environment]
+  NODE_VERSION = "24"
+  NEXT_PUBLIC_API_WAKE_URL = "https://bqueue-api.onrender.com/api/health"
+  NEXT_PUBLIC_SOCKET_URL = "https://bqueue-api.onrender.com"
+  NEXT_PUBLIC_SITE_URL = "https://bqueue.netlify.app"
+
+# Every API call goes through this proxy. Netlify signs it with PROXY_SIGNING_SECRET (set in Netlify's
+# environment, never here), and the API refuses calls without that signature.
+[[redirects]]
+  from = "/api/*"
+  to = "https://bqueue-api.onrender.com/api/:splat"
+  status = 200
+  force = true
+  signed = "PROXY_SIGNING_SECRET"
+
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
